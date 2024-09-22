@@ -1,5 +1,9 @@
 import pygame
 
+def custom_round(x):
+    x = round(x)
+    if(x % 10 >= 5): return (x//10)*10 + 10
+    return (x//10)*10
 class Board:
     def __init__(self, MyBoard):
         self.size = MyBoard[0]
@@ -25,15 +29,14 @@ class Board:
     def player_move(self, pos):
         # Lấy tọa độ chuột
         mouse_x, mouse_y = pos
-
+        
         # Tính toán tọa độ ô gần nhất
-        x = round(mouse_x / self.spacing) -1 # Làm tròn tọa độ x
-        y = round(mouse_y / self.spacing) -1# Làm tròn tọa độ y
+        x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
+        y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
         # Kiểm tra ô trống
         if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
             self.board[x][y] = 1  # Giả sử người chơi là quân trắng
-            print(f"Player move: {x+1}, {y+1}")
             self.current_turn = "AI"
 
 

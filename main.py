@@ -24,7 +24,7 @@ choiceBoard = {
 }
 
 # Khởi tạo đối tượng Board và AI
-board = Board(choiceBoard[9]) 
+board = Board(choiceBoard[13]) 
 ai = AI()
 
 # Vòng lặp chính
