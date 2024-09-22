@@ -6,7 +6,7 @@ from ai import AI
 pygame.init()
 
 # Kích thước cửa sổ
-width, height = 600, 600
+width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Cờ Vây AI")
 
@@ -20,11 +20,11 @@ pygame.display.set_caption("Cờ Vây AI")
 choiceBoard = {
     19: (19,'19x19board.jpg', 31.3, 20, 12),
     13: (13,'13x13board.png', 45.5, 27, 17), # Các ae tự sửa chỗ này theo ảnh bàn cờ 
-    9: (9,'9x9board.webp', 40, 145, 19) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+    9: (9,'9x9board.png', 66, 35, 22) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
 }
 
 # Khởi tạo đối tượng Board và AI
-board = Board(choiceBoard[13]) 
+board = Board(choiceBoard[9]) 
 ai = AI()
 
 # Vòng lặp chính

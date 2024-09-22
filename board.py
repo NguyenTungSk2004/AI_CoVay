@@ -27,8 +27,8 @@ class Board:
         mouse_x, mouse_y = pos
 
         # Tính toán tọa độ ô gần nhất
-        x = round(mouse_x / 30) -1 # Làm tròn tọa độ x
-        y = round(mouse_y / 30) -1 # Làm tròn tọa độ y
+        x = round(mouse_x / self.spacing) -1 # Làm tròn tọa độ x
+        y = round(mouse_y / self.spacing) -1# Làm tròn tọa độ y
 
         # Kiểm tra ô trống
         if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
