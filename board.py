@@ -7,9 +7,9 @@ class Board:
         self.current_turn = "Player"
         self.image = pygame.image.load(MyBoard[1])  # Tải hình nền bàn cờ
         self.image = pygame.transform.scale(self.image, (600, 600))  # Thay đổi kích thước hình nền
-        self.spacing_x = MyBoard[2]
-        self.spacing_y = MyBoard[3]
-        self.chessStart = MyBoard[4]
+        self.spacing = MyBoard[2]
+        self.chessStart = MyBoard[3]
+        self.chessSize = MyBoard[4]
 
     def draw(self, screen):
         # Vẽ hình nền
@@ -18,9 +18,9 @@ class Board:
         for x in range(self.size):
             for y in range(self.size):
                 if self.board[x][y] == 1:
-                    pygame.draw.circle(screen, (255, 255, 255), (x * self.spacing_x + self.chessStart, y * self.spacing_y + self.chessStart), 12)
+                    pygame.draw.circle(screen, (255, 255, 255), (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
                 elif self.board[x][y] == -1:
-                    pygame.draw.circle(screen, (0, 0, 0), (x * self.spacing_x + self.chessStart, y * self.spacing_y + self.chessStart), 12)
+                    pygame.draw.circle(screen, (0, 0, 0), (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
 
     def player_move(self, pos):
         # Lấy tọa độ chuột
