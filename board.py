@@ -1,15 +1,15 @@
 import pygame
 
 class Board:
-    def __init__(self, size,img, spacing_x, spacing_y, chessStart):
-        self.size = size
+    def __init__(self, MyBoard):
+        self.size = MyBoard[0]
         self.board = [[0] * self.size for _ in range(self.size)]
         self.current_turn = "Player"
-        self.image = pygame.image.load(img)  # Tải hình nền bàn cờ
+        self.image = pygame.image.load(MyBoard[1])  # Tải hình nền bàn cờ
         self.image = pygame.transform.scale(self.image, (600, 600))  # Thay đổi kích thước hình nền
-        self.spacing_x = spacing_x
-        self.spacing_y = spacing_y
-        self.chessStart = chessStart
+        self.spacing_x = MyBoard[2]
+        self.spacing_y = MyBoard[3]
+        self.chessStart = MyBoard[4]
 
     def draw(self, screen):
         # Vẽ hình nền

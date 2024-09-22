@@ -12,10 +12,19 @@ pygame.display.set_caption("Cờ Vây AI")
 
 
 #Khởi tạo thông số bàn cờ
-
+'''
+    19: (19,'19x19board.jpg', 31.3, 31.3, 20),
+    size: (size, img, spacing_x, spacing_y, chessStart)
+    chessStart: là khoảng cách từ mép bàn cờ đến quân cờ cái này tự mò vì quân cờ bị chui vào bên trái mất tích
+'''
+choiceBoard = {
+    19: (19,'19x19board.jpg', 31.3, 31.3, 20),
+    13: (13,'13x13board.jpg', 46.1, 46.1, 30), # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+    9: (9,'9x9board.jpg', 66.6, 66.6, 45) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+}
 
 # Khởi tạo đối tượng Board và AI
-board = Board(19,'19x19board.jpg',31.3,31.3,20) # 19x19 board with 31.3 spacing and 20 chessStart
+board = Board(choiceBoard[19]) 
 ai = AI()
 
 # Vòng lặp chính
