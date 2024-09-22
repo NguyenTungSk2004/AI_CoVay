@@ -1,19 +1,21 @@
 import pygame
+import color
 
-def custom_round(x):
-    x = round(x)
-    if(x % 10 >= 5): return (x//10)*10 + 10
-    return (x//10)*10
 class Board:
-    def __init__(self, MyBoard):
+    def __init__(self, MyBoard, typeChess):
         self.size = MyBoard[0]
         self.board = [[0] * self.size for _ in range(self.size)]
-        self.current_turn = "Player"
         self.image = pygame.image.load(MyBoard[1])  # Tải hình nền bàn cờ
         self.image = pygame.transform.scale(self.image, (600, 600))  # Thay đổi kích thước hình nền
         self.spacing = MyBoard[2]
         self.chessStart = MyBoard[3]
         self.chessSize = MyBoard[4]
+        self.typeChess = typeChess
+        
+        if (typeChess == -1 ): 
+            self.current_turn = "Player"
+        else : 
+            self.current_turn = "AI"
 
     def draw(self, screen):
         # Vẽ hình nền
@@ -22,9 +24,9 @@ class Board:
         for x in range(self.size):
             for y in range(self.size):
                 if self.board[x][y] == 1:
-                    pygame.draw.circle(screen, (255, 255, 255), (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
+                    pygame.draw.circle(screen, color.WHITE, (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
                 elif self.board[x][y] == -1:
-                    pygame.draw.circle(screen, (0, 0, 0), (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
+                    pygame.draw.circle(screen, color.BLACK, (x * self.spacing + self.chessStart, y * self.spacing + self.chessStart), self.chessSize)
 
     def player_move(self, pos):
         # Lấy tọa độ chuột
@@ -36,13 +38,12 @@ class Board:
 
         # Kiểm tra ô trống
         if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
-            self.board[x][y] = 1  # Giả sử người chơi là quân trắng
+            self.board[x][y] = self.typeChess  # Giả sử người chơi là quân trắng
             self.current_turn = "AI"
-
 
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
-            self.board[x][y] = -1  # Giả sử AI là quân đen
+            self.board[x][y] = -self.typeChess  # Giả sử AI là quân đen
             self.current_turn = "Player"

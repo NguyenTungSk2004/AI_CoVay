@@ -1,6 +1,7 @@
 import pygame
 from board import Board
 from ai import AI
+from gameControl import GameControl
 
 # Khởi tạo Pygame
 pygame.init()
@@ -10,6 +11,8 @@ width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Cờ Vây AI")
 
+# Font chữ
+font = pygame.font.SysFont('Arial', 24)
 
 #Khởi tạo thông số bàn cờ
 '''
@@ -23,8 +26,15 @@ choiceBoard = {
     9: (9,'9x9board.png', 66, 35, 22) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
 }
 
-# Khởi tạo đối tượng Board và AI
-board = Board(choiceBoard[13]) 
+# Input đầu vào các options người dùng
+# typeChess = int(input("Chọn quân cờ (1 - Trắng, -1 - Đen): "))
+# sizeGame = int(input("Chọn kích thước bàn cờ (9, 13, 19): "))
+typeChess = -1
+sizeGame = 19
+
+# Khởi tạo đối tượng
+board = Board(choiceBoard[sizeGame],typeChess) 
+gameControl = GameControl(screen, font, typeChess)
 ai = AI()
 
 # Vòng lặp chính
@@ -40,7 +50,8 @@ while running:
 
     # Vẽ bàn cờ
     board.draw(screen)
-    
+    gameControl.draw_scoreboard(height)
+
     # AI đưa ra nước đi
     if board.current_turn == "AI":
         ai_move = ai.get_move(board)
