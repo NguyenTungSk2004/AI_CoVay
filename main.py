@@ -10,8 +10,12 @@ width, height = 600, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Cờ Vây AI")
 
+
+#Khởi tạo thông số bàn cờ
+
+
 # Khởi tạo đối tượng Board và AI
-board = Board()
+board = Board(19,'19x19board.jpg',31.3,31.3,20) # 19x19 board with 31.3 spacing and 20 chessStart
 ai = AI()
 
 # Vòng lặp chính
