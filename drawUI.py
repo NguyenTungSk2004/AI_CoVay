@@ -11,6 +11,7 @@ class Menu:
         # Khởi tạo các hộp chứa thông tin, các nút bấm
         self.input_box = pygame.Rect(270, 100, 250, 40)
         self.exit_button = pygame.Rect(250, 320, 100, 50)
+
         BlackChess, WhiteChess = [pygame.Rect(270 + i * 150, 180, 100, 40) for i in range(2)]
         button_9x9, button_13x13, button_19x19 = [pygame.Rect(295 + i * 150, 250, 100, 40) for i in range(3)]
 
@@ -23,6 +24,7 @@ class Menu:
             "13x13": button_13x13,
             "19x19": button_19x19
         }
+        
         # Khởi tạo các biến nhận dữ liệu
         self.player_name = init_variables[0]
         self.selected_chess = init_variables[1]
