@@ -1,5 +1,6 @@
 import pygame
 import color
+from rules import Rules
 
 class Board:
     def __init__(self, MyBoard, typeChess):
@@ -40,10 +41,12 @@ class Board:
         if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
             self.board[x][y] = self.typeChess  # Giả sử người chơi là quân trắng
             self.current_turn = "AI"
+            self.board = Rules.capture_stones(self.board,-self.typeChess)
 
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
-            self.board[x][y] = -self.typeChess  # Giả sử AI là quân đen
+            self.board[x][y] = -self.typeChess  
             self.current_turn = "Player"
+            self.board = Rules.capture_stones(self.board,self.typeChess)

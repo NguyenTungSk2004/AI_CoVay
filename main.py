@@ -37,7 +37,7 @@ def initialize_game(screen, font, sizeGame, typeChess):
 # typeChess = int(input("Chọn quân cờ (1 - Trắng, -1 - Đen): "))
 # sizeGame = int(input("Chọn kích thước bàn cờ (9, 13, 19): "))
 typeChess = -1
-sizeGame = 19
+sizeGame = 9
 board, gameControl, ai = initialize_game(screen, font, sizeGame, typeChess)
 
 # Vòng lặp chính
