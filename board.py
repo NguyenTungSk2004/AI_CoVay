@@ -40,13 +40,45 @@ class Board:
         # Kiểm tra ô trống
         if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
             self.board[x][y] = self.typeChess  # Giả sử người chơi là quân trắng
-            self.current_turn = "AI"
-            self.board = Rules.capture_stones(self.board,-self.typeChess)
-
+            board = Rules.capture_stones(self.board,-self.typeChess)
+            not_alive, visited = Rules.is_captured(board, x, y)
+            if not not_alive:
+                self.current_turn = "AI"
+                self.board = board
+            else:
+                self.board[x][y] = 0
+            
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
             self.board[x][y] = -self.typeChess  
-            self.current_turn = "Player"
-            self.board = Rules.capture_stones(self.board,self.typeChess)
+            board = Rules.capture_stones(self.board,self.typeChess)
+            not_alive, visited = Rules.is_captured(board, x, y)
+            if not not_alive:
+                self.current_turn = "Player"
+                self.board = board
+            else:
+                self.board[x][y] = 0
+
+    
+    def test_ai_click(self, move):
+        # Đánh dấu nước đi của AI
+        if move:
+            # Lấy tọa độ chuột
+            mouse_x, mouse_y = move
+            
+            # Tính toán tọa độ ô gần nhất
+            x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
+            y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
+
+            # Kiểm tra ô trống
+            if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
+                self.board[x][y] = -self.typeChess  
+                board = Rules.capture_stones(self.board,self.typeChess)
+                not_alive, visited = Rules.is_captured(board, x, y)
+                if not not_alive:
+                    self.current_turn = "Player"
+                    self.board = board
+                else:
+                    self.board[x][y] = 0

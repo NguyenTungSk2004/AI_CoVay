@@ -51,3 +51,4 @@ class Rules:
                         for chess in groupChess:
                             board[chess[0]][chess[1]] = 0  # Loại bỏ quân bị bắt
         return board
+    
