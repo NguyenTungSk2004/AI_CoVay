@@ -1,4 +1,7 @@
 class Rules:
+    """
+        output: các ô bên trên, dưới, trái phải của ô truyền vào
+    """
     @classmethod
     def get_neighbors(cls, row, col, board):
         board_size = len(board)
@@ -11,6 +14,9 @@ class Rules:
         # Lọc ra những ô lân cận hợp lệ
         return [(r, c) for r, c in neighbors if 0 <= r < board_size and 0 <= c < board_size]
 
+    """
+        output: kiểm tra xem nhóm quân cờ còn khí hay không.
+    """
     @classmethod
     def is_captured(cls, board, row, col):
         color = board[row][col]
@@ -29,6 +35,9 @@ class Rules:
                     return False, visited  # Không bị bắt
         return True, visited  # Không còn khí, quân bị bắt
 
+    """
+        output: bàn cờ sau khi bắt quân cờ
+    """
     @classmethod
     def capture_stones(cls, board, typeChess):
         for row in range(len(board)):
