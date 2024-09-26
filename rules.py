@@ -1,3 +1,6 @@
+"""
+    Code các luật ở đây
+"""
 class Rules:
     """
         output: các ô bên trên, dưới, trái phải của ô truyền vào
@@ -44,7 +47,6 @@ class Rules:
             for col in range(len(board)):
                 if board[row][col] == typeChess:  # Quân hiện tại
                     check, groupChess = cls.is_captured(board, row, col)
-                    print("Chess: ", check, groupChess)
                     if check:
                         for chess in groupChess:
                             board[chess[0]][chess[1]] = 0  # Loại bỏ quân bị bắt

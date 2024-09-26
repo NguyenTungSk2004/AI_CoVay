@@ -14,7 +14,7 @@ def load_font(font_name='tahoma', size=30):
 def load_background(image_path, width, height):
     # Tải và điều chỉnh kích thước hình nền
     background_image = pygame.image.load(image_path)
-    background_image = pygame.transform.scale(background_image, (width, height))
+    background_image = pygame.transform.scale(background_image, (width+20, height))
     return background_image
 
 def draw_text(text, font, color, surface, x, y):

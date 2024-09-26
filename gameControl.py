@@ -27,8 +27,8 @@ class GameControl:
         self.typeChess = typeChess # Quân cờ của người chơi
 
         # Thông tin đối tượng hiển thị
-        self.skip_button_rect = pygame.Rect(610, 500, 180, 50)  # Nút skip
-        self.surrender_button_rect = pygame.Rect(610, 560, 180, 50)  # Nút đầu hàng
+        self.skip_button_rect = pygame.Rect(610, 480, 180, 50)  # Nút skip
+        self.surrender_button_rect = pygame.Rect(610, 540, 180, 50)  # Nút đầu hàng
         self.exit_button_rect = pygame.Rect(250, 350, 100, 50) # Nút thoát
         self.replay_button_rect = pygame.Rect(450, 350, 100, 50) # Nút chơi lại
 
@@ -55,24 +55,24 @@ class GameControl:
 
         # Hiển thị tên người chơi
         player_text = self.font.render(self.player_name, True, color.BLACK)
-        self.screen.blit(player_text, (610, 30))
+        self.screen.blit(player_text, (610, 10))
 
         # Hiển thị số quân ăn được của người chơi
         score_text = self.font.render(f": {self.player_score}", True, color.BLACK)
-        pygame.draw.circle(self.screen, player_chess, (630, 85), 14)  # icon quân cờ
-        self.screen.blit(score_text, (650, 70))
+        pygame.draw.circle(self.screen, player_chess, (630, 65), 14)  # icon quân cờ
+        self.screen.blit(score_text, (650, 50))
 
         # Hiển thị AI
         player_text = self.font.render("AI Sk follow me", True, color.BLACK)
-        self.screen.blit(player_text, (610, 410))
+        self.screen.blit(player_text, (610, 390))
 
         # Hiển thị số quân ăn được của AI
         ai_score_text = self.font.render(f": {self.ai_score}", True, color.BLACK)
-        pygame.draw.circle(self.screen, ai_chess, (630, 465), 14)  # icon quân cờ
-        self.screen.blit(ai_score_text, (650, 450))
+        pygame.draw.circle(self.screen, ai_chess, (630, 445), 14)  # icon quân cờ
+        self.screen.blit(ai_score_text, (650, 430))
 
         turn_text = self.font.render(f"Turn: {self.board.current_turn}", True, color.BLACK)
-        self.screen.blit(turn_text, (610, 250))
+        self.screen.blit(turn_text, (610, 230))
     
         pygame.draw.rect(self.screen, color.DARK_GRAY, self.skip_button_rect)
         skip_text = self.font.render("Bo qua", True, color.WHITE)
