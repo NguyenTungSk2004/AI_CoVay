@@ -38,28 +38,19 @@ class Board:
         y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
         # Kiểm tra ô trống
-        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
-            self.board[x][y] = self.typeChess  # Giả sử người chơi là quân trắng
-            board = Rules.capture_stones(self.board,-self.typeChess)
-            not_alive, visited = Rules.is_captured(board, x, y)
-            if not not_alive:
-                self.current_turn = "AI"
-                self.board = board
-            else:
-                self.board[x][y] = 0
-            
+        if Rules.is_valid_move(self.board, x, y,self.typeChess):
+            self.current_turn = "AI"
+            self.board[x][y] = self.typeChess
+            Rules.capture_stones(self.board,-self.typeChess)
+        
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
-            self.board[x][y] = -self.typeChess  
-            board = Rules.capture_stones(self.board,self.typeChess)
-            not_alive, visited = Rules.is_captured(board, x, y)
-            if not not_alive:
+            if Rules.is_valid_move(self.board,x,y,-self.typeChess):
                 self.current_turn = "Player"
-                self.board = board
-            else:
-                self.board[x][y] = 0
+                self.board[x][y] = -self.typeChess  
+                Rules.capture_stones(self.board,self.typeChess)
 
     
     def test_ai_click(self, move):
@@ -72,13 +63,7 @@ class Board:
             x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
             y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
-            # Kiểm tra ô trống
-            if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
+            if Rules.is_valid_move(self.board, x, y,-self.typeChess):
+                self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
-                board = Rules.capture_stones(self.board,self.typeChess)
-                not_alive, visited = Rules.is_captured(board, x, y)
-                if not not_alive:
-                    self.current_turn = "Player"
-                    self.board = board
-                else:
-                    self.board[x][y] = 0
+                Rules.capture_stones(self.board,self.typeChess)
