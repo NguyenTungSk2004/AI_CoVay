@@ -1,7 +1,7 @@
 import pygame
 import color
 from rules import Rules
-
+from KO_rule import KO_rule
 class Board:
     def __init__(self, MyBoard, typeChess):
         self.size = MyBoard[0]
@@ -12,6 +12,7 @@ class Board:
         self.chessStart = MyBoard[3]
         self.chessSize = MyBoard[4]
         self.typeChess = typeChess
+        self.KO_rule = KO_rule()
         
         if (typeChess == -1 ): 
             self.current_turn = "Player"
@@ -38,7 +39,7 @@ class Board:
         y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
         # Kiểm tra ô trống
-        if Rules.is_valid_move(self.board, x, y,self.typeChess):
+        if Rules.is_valid_move(self.board, x, y,self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
             self.current_turn = "AI"
             self.board[x][y] = self.typeChess
             Rules.capture_stones(self.board,-self.typeChess)
@@ -63,7 +64,7 @@ class Board:
             x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
             y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
-            if Rules.is_valid_move(self.board, x, y,-self.typeChess):
+            if Rules.is_valid_move(self.board, x, y,-self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
                 Rules.capture_stones(self.board,self.typeChess)

@@ -1,0 +1,1 @@
+game.is_repeated_state(test2,2,2,1) #ng
