@@ -12,7 +12,8 @@ class Board:
         self.chessStart = MyBoard[3]
         self.chessSize = MyBoard[4]
         self.typeChess = typeChess
-        
+        self.rule = Rules()
+
         if (typeChess == -1 ): 
             self.current_turn = "Player"
         else : 
@@ -38,19 +39,23 @@ class Board:
         y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
         # Kiểm tra ô trống
-        if Rules.is_valid_move(self.board, x, y,self.typeChess):
+        suicidal = self.rule.is_suicidal(self.board, x, y,self.typeChess)
+        repeated_state = self.rule.is_repeated_state(self.board,x,y,self.typeChess)
+        if suicidal and repeated_state:
             self.current_turn = "AI"
             self.board[x][y] = self.typeChess
-            Rules.capture_stones(self.board,-self.typeChess)
+            self.rule.capture_stones(self.board,-self.typeChess)
         
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
-            if Rules.is_valid_move(self.board,x,y,-self.typeChess):
+            suicidal = self.rule.is_suicidal(self.board,x,y,-self.typeChess) 
+            reapeated_state = self.rule.is_repeated_state(self.board,x,y,-self.typeChess)
+            if suicidal and reapeated_state:
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
-                Rules.capture_stones(self.board,self.typeChess)
+                self.rule.capture_stones(self.board,self.typeChess)
 
     
     def test_ai_click(self, move):
@@ -63,7 +68,10 @@ class Board:
             x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
             y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
-            if Rules.is_valid_move(self.board, x, y,-self.typeChess):
+            suicidal = self.rule.is_suicidal(self.board,x,y,-self.typeChess) 
+            reapeated_state = self.rule.is_repeated_state(self.board,x,y,-self.typeChess)
+            
+            if suicidal and reapeated_state:
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
-                Rules.capture_stones(self.board,self.typeChess)
+                self.rule.capture_stones(self.board,self.typeChess)
