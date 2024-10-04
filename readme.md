@@ -1,2 +1,1 @@
-ngol vai loz dcme
-
+alo alo hello world 
