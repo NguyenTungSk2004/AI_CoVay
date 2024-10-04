@@ -1,1 +1,1 @@
-ngol
+ngol vai loz
