@@ -48,7 +48,7 @@ class Board:
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
-            if Rules.is_valid_move(self.board,x,y,-self.typeChess):
+            if Rules.is_valid_move(self.board,x,y,-self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
                 Rules.capture_stones(self.board,self.typeChess)

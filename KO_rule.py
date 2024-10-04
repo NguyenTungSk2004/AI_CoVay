@@ -19,7 +19,6 @@ class KO_rule:
         if board == self.previous_board:
             print("Nuoc di khong hop le")
             return False
-
         print("Nuoc di hop le")
         return True
     def is_repeated_state(self,board,x,y,typeChess):
