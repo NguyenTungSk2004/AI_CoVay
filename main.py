@@ -75,14 +75,12 @@ while running:
                     pos = pygame.mouse.get_pos()
                     if gameControl.getSkipButton().collidepoint(pos):
                         # Người chơi nhấn nút "Bỏ qua"
-                        board.current_turn = "AI" if board.current_turn == "Player" else "Player"
+                        board.current_turn = "AI"
                     elif gameControl.surrender_button_rect.collidepoint(pos):
                         # Người chơi nhấn nút "Đầu hàng"
                         game_over = True
-                    elif event.button ==1 and board.current_turn == "Player":
+                    else:
                         board.player_move(pos)
-                    elif event.button == 3 and board.current_turn == "AI":
-                        board.test_ai_click(pos)
             else:
                 # Xử lý sự kiện chuột cho hộp thoại kết thúc
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -141,9 +139,9 @@ while running:
             gameControl.draw_game_over_dialog() 
 
        # AI đưa ra nước đi
-        # if board.current_turn == "AI":
-        #     ai_move = ai.get_move(board)
-        #     board.ai_move(ai_move)
+        if board.current_turn == "AI":
+            ai_move = ai.get_move(board)
+            board.ai_move(ai_move)
 
     pygame.display.flip()
 

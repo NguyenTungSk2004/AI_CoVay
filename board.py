@@ -45,6 +45,7 @@ class Board:
 
         # Kiểm tra ô trống
 <<<<<<< HEAD
+<<<<<<< HEAD
         if Rules.is_valid_move(self.board, x, y,self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
 =======
         suicidal = self.rule.is_suicidal(self.board, x, y,self.typeChess)
@@ -55,10 +56,18 @@ class Board:
             self.board[x][y] = self.typeChess
             self.rule.capture_stones(self.board,-self.typeChess)
         
+=======
+        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
+            self.board[x][y] = self.typeChess  # Giả sử người chơi là quân trắng
+            self.current_turn = "AI"
+            self.board = Rules.capture_stones(self.board,-self.typeChess)
+
+>>>>>>> parent of 1c2cb06 (update luật tự tử)
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
+<<<<<<< HEAD
 <<<<<<< HEAD
             if Rules.is_valid_move(self.board,x,y,-self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
 =======
@@ -92,3 +101,8 @@ class Board:
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
                 self.rule.capture_stones(self.board,self.typeChess)
+=======
+            self.board[x][y] = -self.typeChess  
+            self.current_turn = "Player"
+            self.board = Rules.capture_stones(self.board,self.typeChess)
+>>>>>>> parent of 1c2cb06 (update luật tự tử)

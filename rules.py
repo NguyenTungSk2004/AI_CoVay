@@ -66,6 +66,7 @@ class Rules:
                     if check:
                         for chess in groupChess:
                             board[chess[0]][chess[1]] = 0  # Loại bỏ quân bị bắt
+<<<<<<< HEAD
 
     def is_suicidal(self, board_real, x, y, typeChess):
         """
@@ -112,3 +113,6 @@ class Rules:
         board[x][y] = typeChess
         self.capture_stones(board,-typeChess)
         return self.check_duplicate(board)
+=======
+        return board
+>>>>>>> parent of 1c2cb06 (update luật tự tử)
