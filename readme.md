@@ -1,1 +1,2 @@
-ngol vai loz
+ngol vai loz dcme
+
