@@ -12,8 +12,13 @@ class Board:
         self.chessStart = MyBoard[3]
         self.chessSize = MyBoard[4]
         self.typeChess = typeChess
+<<<<<<< HEAD
         self.KO_rule = KO_rule()
         
+=======
+        self.rule = Rules()
+
+>>>>>>> 6497adac11a402afeb939fa940d30ade4bcba3fb
         if (typeChess == -1 ): 
             self.current_turn = "Player"
         else : 
@@ -39,19 +44,31 @@ class Board:
         y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
         # Kiểm tra ô trống
+<<<<<<< HEAD
         if Rules.is_valid_move(self.board, x, y,self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
+=======
+        suicidal = self.rule.is_suicidal(self.board, x, y,self.typeChess)
+        repeated_state = self.rule.is_repeated_state(self.board,x,y,self.typeChess)
+        if suicidal and repeated_state:
+>>>>>>> 6497adac11a402afeb939fa940d30ade4bcba3fb
             self.current_turn = "AI"
             self.board[x][y] = self.typeChess
-            Rules.capture_stones(self.board,-self.typeChess)
+            self.rule.capture_stones(self.board,-self.typeChess)
         
     def ai_move(self, move):
         # Đánh dấu nước đi của AI
         if move:
             x, y = move
+<<<<<<< HEAD
             if Rules.is_valid_move(self.board,x,y,-self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
+=======
+            suicidal = self.rule.is_suicidal(self.board,x,y,-self.typeChess) 
+            reapeated_state = self.rule.is_repeated_state(self.board,x,y,-self.typeChess)
+            if suicidal and reapeated_state:
+>>>>>>> 6497adac11a402afeb939fa940d30ade4bcba3fb
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
-                Rules.capture_stones(self.board,self.typeChess)
+                self.rule.capture_stones(self.board,self.typeChess)
 
     
     def test_ai_click(self, move):
@@ -64,7 +81,14 @@ class Board:
             x = round((mouse_x - self.chessStart )/ self.spacing)  # Làm tròn tọa độ x
             y = round((mouse_y - self.chessStart) / self.spacing) # Làm tròn tọa độ y
 
+<<<<<<< HEAD
             if Rules.is_valid_move(self.board, x, y,-self.typeChess) and self.KO_rule.is_repeated_state(self.board,x,y,self.typeChess):
+=======
+            suicidal = self.rule.is_suicidal(self.board,x,y,-self.typeChess) 
+            reapeated_state = self.rule.is_repeated_state(self.board,x,y,-self.typeChess)
+            
+            if suicidal and reapeated_state:
+>>>>>>> 6497adac11a402afeb939fa940d30ade4bcba3fb
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
-                Rules.capture_stones(self.board,self.typeChess)
+                self.rule.capture_stones(self.board,self.typeChess)

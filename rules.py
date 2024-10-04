@@ -1,9 +1,11 @@
 class Rules:
-    """
-        Code các luật ở đây
-    """
-    @classmethod
-    def get_neighbors(cls, row, col, board):
+
+    def __init__(self):
+        # Trạng thái phụ thuộc của luật KO
+        self.current_board = None  
+        self.previous_board = None  
+
+    def get_neighbors(self, row, col, board):
         """
         Trả về các ô lân cận (trên, dưới, trái, phải) của ô truyền vào.
 
@@ -22,8 +24,7 @@ class Rules:
         # Lọc ra những ô lân cận hợp lệ
         return [(r, c) for r, c in neighbors if 0 <= r < board_size and 0 <= c < board_size]
 
-    @classmethod
-    def is_captured(cls, board, row, col):
+    def is_captured(self, board, row, col):
         """
         Kiểm tra xem nhóm quân cờ tại vị trí (row, col) có bị bắt hay không.
 
@@ -41,7 +42,7 @@ class Rules:
             current = to_visit.pop()
             visited.add(current)
             
-            for neighbor in cls.get_neighbors(current[0], current[1], board):
+            for neighbor in self.get_neighbors(current[0], current[1], board):
                 r, c = neighbor
                 if board[r][c] == color and neighbor not in visited:
                     to_visit.append(neighbor)
@@ -50,8 +51,7 @@ class Rules:
         return True, visited  # Không còn khí, quân bị bắt
 
 
-    @classmethod
-    def capture_stones(cls, board, typeChess):
+    def capture_stones(self, board, typeChess):
         """
         Thực hiện việc bắt quân cờ và trả về trạng thái bàn cờ sau khi bắt quân.
 
@@ -62,13 +62,12 @@ class Rules:
         for row in range(len(board)):
             for col in range(len(board)):
                 if board[row][col] == typeChess:  # Quân cần bắt
-                    check, groupChess = cls.is_captured(board, row, col)
+                    check, groupChess = self.is_captured(board, row, col)
                     if check:
                         for chess in groupChess:
                             board[chess[0]][chess[1]] = 0  # Loại bỏ quân bị bắt
 
-    @classmethod
-    def is_valid_move(cls, board_real, x, y, typeChess):
+    def is_suicidal(self, board_real, x, y, typeChess):
         """
         Kiểm tra xem nước đi (x, y) có hợp lệ không.
 
@@ -84,8 +83,32 @@ class Rules:
         if not (0 <= x < size and 0 <= y < size and board[x][y] == 0):
             return False
         board[x][y] = typeChess  
-        Rules.capture_stones(board,-typeChess)
-        not_alive, visited = Rules.is_captured(board, x, y)
+        self.capture_stones(board,-typeChess)
+        not_alive, visited = self.is_captured(board, x, y)
 
         return not not_alive
     
+    def check_duplicate(self, board_real):
+        board = [row[:] for row in board_real]
+        
+        if self.current_board is None:
+            self.current_board = board
+            print("Nuoc dau tien")
+            return True
+        
+        if board != self.previous_board: 
+            self.previous_board = self.current_board
+            self.current_board = board
+
+        if board == self.previous_board:
+            print("Nuoc di khong hop le")
+            return False
+
+        print("Nuoc di hop le")
+        return True
+    
+    def is_repeated_state(self,board,x,y,typeChess):
+        board = [row[:] for row in board]
+        board[x][y] = typeChess
+        self.capture_stones(board,-typeChess)
+        return self.check_duplicate(board)
