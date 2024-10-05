@@ -75,3 +75,6 @@ class Board:
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
                 self.rule.capture_stones(self.board,self.typeChess)
+
+    def whoIsWinner(self):
+        return self.rule.who_win(self.board)

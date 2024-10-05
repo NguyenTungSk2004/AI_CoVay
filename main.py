@@ -2,8 +2,9 @@ import pygame
 from board import Board
 from ai import AI
 from gameControl import GameControl
-import color
 from drawUI import Menu
+from rules import Rules
+
 from effect_game import start_game as Fighting
 from setup import init_screen, load_font, load_background
 
@@ -47,6 +48,8 @@ input_active = False
 play_active = False
 board, gameControl, ai = None, None, None
 
+skipForGame = 0
+
 init_variables =  [player_name, typeChess, sizeGame, input_active]
 menu = Menu(screen, font, allChess, board_sizes, init_variables)
 
@@ -75,28 +78,34 @@ while running:
                     pos = pygame.mouse.get_pos()
                     if gameControl.getSkipButton().collidepoint(pos):
                         # Người chơi nhấn nút "Bỏ qua"
+                        skipForGame += 1 
+                        if skipForGame == 2: game_over = True
                         board.current_turn = "AI" if board.current_turn == "Player" else "Player"
+
                     elif gameControl.surrender_button_rect.collidepoint(pos):
                         # Người chơi nhấn nút "Đầu hàng"
                         game_over = True
                     elif event.button ==1 and board.current_turn == "Player":
                         board.player_move(pos)
+                        skipForGame = 0
                     elif event.button == 3 and board.current_turn == "AI":
                         board.test_ai_click(pos)
+                        skipForGame = 0
             else:
                 # Xử lý sự kiện chuột cho hộp thoại kết thúc
+                print(f"Winner is ",board.whoIsWinner())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     if gameControl.getExitButton().collidepoint(pos):
                         # Người chơi nhấn nút "Thoát"
                         play_active = False
                         game_over = False
-
                     elif gameControl.getReplayButton().collidepoint(pos):
                         # Người chơi nhấn nút "Chơi lại"
                         game_over = False
                         board, gameControl, ai = initialize_game(screen, font, sizeGame, typeChess)
-        
+                        skipForGame = 0
+
         elif not play_active:
             # Menu game
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -122,6 +131,7 @@ while running:
                     Fighting(screen, width, height)
                     board, gameControl, ai = initialize_game(screen, font, sizeGame, typeChess)
                     play_active = True
+                    skipForGame = 0
 
             # Xử lý sự kiện nhập tên người chơi
             if event.type == pygame.KEYDOWN and input_active:

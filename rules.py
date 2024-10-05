@@ -8,12 +8,12 @@ class Rules:
         
     def get_neighbors(self, row, col, board):
         """
-        Trả về các ô lân cận (trên, dưới, trái, phải) của ô truyền vào.
+            Trả về các ô lân cận (trên, dưới, trái, phải) của ô truyền vào.
 
-        :param row: Chỉ số hàng của ô hiện tại.
-        :param col: Chỉ số cột của ô hiện tại.
-        :param board: Ma trận 2D đại diện cho bàn cờ.
-        :return: Danh sách các ô lân cận hợp lệ (trong phạm vi bàn cờ).
+            :param row: Chỉ số hàng của ô hiện tại.
+            :param col: Chỉ số cột của ô hiện tại.
+            :param board: Ma trận 2D đại diện cho bàn cờ.
+            :return: Danh sách các ô lân cận hợp lệ (trong phạm vi bàn cờ).
         """
         board_size = len(board)
         neighbors = [
@@ -27,13 +27,13 @@ class Rules:
 
     def is_captured(self, board, row, col):
         """
-        Kiểm tra xem nhóm quân cờ tại vị trí (row, col) có bị bắt hay không.
+            Kiểm tra xem nhóm quân cờ tại vị trí (row, col) có bị bắt hay không.
 
-        :param board: Ma trận 2D đại diện cho bàn cờ.
-        :param row: Chỉ số hàng của ô hiện tại.
-        :param col: Chỉ số cột của ô hiện tại.
-        :return: Tuple (bool, set) - True nếu nhóm quân bị bắt, False nếu còn khí (ô trống).
-                 Set chứa các ô thuộc nhóm quân đã kiểm tra.
+            :param board: Ma trận 2D đại diện cho bàn cờ.
+            :param row: Chỉ số hàng của ô hiện tại.
+            :param col: Chỉ số cột của ô hiện tại.
+            :return: Tuple (bool, set) - True nếu nhóm quân bị bắt, False nếu còn khí (ô trống).
+                    Set chứa các ô thuộc nhóm quân đã kiểm tra.
         """
         color = board[row][col]
         visited = set()
@@ -54,11 +54,11 @@ class Rules:
 
     def capture_stones(self, board, typeChess):
         """
-        Thực hiện việc bắt quân cờ và trả về trạng thái bàn cờ sau khi bắt quân.
+            Thực hiện việc bắt quân cờ và trả về trạng thái bàn cờ sau khi bắt quân.
 
-        :param board: Ma trận 2D đại diện cho trạng thái bàn cờ hiện tại.
-        :param typeChess: Loại quân cờ cần kiểm tra và bắt (ví dụ: -1 là quân đen, 1 là quân trắng).
-        :return: Ma trận 2D đại diện cho trạng thái bàn cờ sau khi bắt quân cờ.
+            :param board: Ma trận 2D đại diện cho trạng thái bàn cờ hiện tại.
+            :param typeChess: Loại quân cờ cần kiểm tra và bắt (ví dụ: -1 là quân đen, 1 là quân trắng).
+            :return: Ma trận 2D đại diện cho trạng thái bàn cờ sau khi bắt quân cờ.
         """
         for row in range(len(board)):
             for col in range(len(board)):
@@ -70,13 +70,13 @@ class Rules:
 
     def is_suicidal(self, board_real, x, y, typeChess):
         """
-        Kiểm tra xem nước đi (x, y) có hợp lệ không.
+            Kiểm tra xem nước đi (x, y) có hợp lệ không.
 
-        :param board: Ma trận 2D đại diện cho bàn cờ.
-        :param row: Chỉ số hàng của nước đi.
-        :param col: Chỉ số cột của nước đi.
-        :param typeChess: Loại quân cờ cần kiểm tra (ví dụ: -1 là quân đen, 1 là quân trắng).
-        :return: True nếu nước đi hợp lệ, ngược lại False.
+            :param board: Ma trận 2D đại diện cho bàn cờ.
+            :param row: Chỉ số hàng của nước đi.
+            :param col: Chỉ số cột của nước đi.
+            :param typeChess: Loại quân cờ cần kiểm tra (ví dụ: -1 là quân đen, 1 là quân trắng).
+            :return: True nếu nước đi hợp lệ, ngược lại False.
         """
 
         board = [row[:] for row in board_real]
@@ -91,13 +91,13 @@ class Rules:
     
     def check_duplicate(self, board_real):
         """
-        Kiểm tra xem nước đi có bị trùng lặp hay không.
+            Kiểm tra xem nước đi có bị trùng lặp hay không.
 
-        Parameters:
-        board_real (list): Bảng hiện tại của trò chơi.
+            Parameters:
+            board_real (list): Bảng hiện tại của trò chơi.
 
-        Returns:
-        bool: Trả về True nếu nước đi hợp lệ, False nếu nước đi không hợp lệ.
+            Returns:
+            bool: Trả về True nếu nước đi hợp lệ, False nếu nước đi không hợp lệ.
         """
         # Tạo một bản sao của bảng hiện tại
         board = [row[:] for row in board_real]
@@ -124,16 +124,16 @@ class Rules:
     
     def is_repeated_state(self, board, x, y, typeChess):
         """
-        Kiểm tra xem trạng thái của bảng có bị lặp lại hay không sau khi thực hiện một nước đi.
+            Kiểm tra xem trạng thái của bảng có bị lặp lại hay không sau khi thực hiện một nước đi.
 
-        Parameters:
-        board (list): Bảng hiện tại của trò chơi.
-        x (int): Chỉ số hàng của nước đi.
-        y (int): Chỉ số cột của nước đi.
-        typeChess (int): Loại quân cờ được đặt (ví dụ: 1 cho quân đen, -1 cho quân trắng).
+            Parameters:
+            board (list): Bảng hiện tại của trò chơi.
+            x (int): Chỉ số hàng của nước đi.
+            y (int): Chỉ số cột của nước đi.
+            typeChess (int): Loại quân cờ được đặt (ví dụ: 1 cho quân đen, -1 cho quân trắng).
 
-        Returns:
-        bool: Trả về True nếu trạng thái bảng bị lặp lại, False nếu không bị lặp lại.
+            Returns:
+            bool: Trả về True nếu trạng thái bảng bị lặp lại, False nếu không bị lặp lại.
         """
         # Tạo một bản sao của bảng hiện tại
         board = [row[:] for row in board]
@@ -210,12 +210,16 @@ class Rules:
     def who_win(self, board):
         """
             Tính toán điểm của cả hai bên và xác định người chiến thắng.
-            :param board: Ma trận 2D đại diện cho bàn cờ.
-            :return: 1 nếu quân trắng thắng, -1 nếu quân đen thắng.
+
+            Parameters:
+            board (list): Ma trận 2D đại diện cho bàn cờ.
+
+            Returns:
+            tuple: (1 nếu quân trắng thắng, -1 nếu quân đen thắng, điểm của quân trắng, điểm của quân đen)
         """
         white_territory, black_territory = self.count_territory(board)
         white_stones, black_stones = self.count_stones(board)
         white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
         black_score = black_stones + black_territory  # Điểm của quân đen
 
-        return 1 if white_score > black_score else -1 
+        return 1 if white_score > black_score else -1, white_score, black_score

@@ -133,18 +133,18 @@ class AI:
         return len(self.get_valid_moves(board_state, player=-1)) == 0 and len(self.get_valid_moves(board_state, player=1)) == 0
 
 
-board_size = 5  # Kích thước bàn cờ 5x5
-go_ai = AI(board_size)
+# board_size = 5  # Kích thước bàn cờ 5x5
+# go_ai = AI(board_size)
 
-# Khởi tạo bàn cờ trống
-initial_board_state = [
-    [0, 1, 0, 0, 1],
-    [-1, 1, -1, 1, -1],
-    [1, 0, -1, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0]
-]
+# # Khởi tạo bàn cờ trống
+# initial_board_state = [
+#     [0, 1, 0, 0, 1],
+#     [-1, 1, -1, 1, -1],
+#     [1, 0, -1, 0, 0],
+#     [0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0]
+# ]
 
-# Gọi hàm get_next_move để tìm nước đi tốt nhất cho quân đen (-1)
-best_move = go_ai.get_next_move(initial_board_state, player=-1)
-print(f"Nước đi tốt nhất cho quân đen (-1): {best_move}")
+# # Gọi hàm get_next_move để tìm nước đi tốt nhất cho quân đen (-1)
+# best_move = go_ai.get_next_move(initial_board_state, player=-1)
+# print(f"Nước đi tốt nhất cho quân đen (-1): {best_move}")

@@ -1,6 +1,5 @@
 import pygame
 import color
-from ai import AI
 
 def draw_gradient_rect(surface, color1, color2, rect):
     """Draw a gradient rectangle."""
