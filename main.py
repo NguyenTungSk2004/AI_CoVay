@@ -54,6 +54,13 @@ menu = Menu(screen, font, allChess, board_sizes, init_variables)
 running = True
 game_over = False
 while running:
+
+    if play_active:
+        #AI đưa ra nước đi
+        if board.current_turn == "AI":
+            board.ai_move()
+            board.current_turn = "Player"
+
     input_box = menu.getInputBox()
     player_name = menu.getPlayerName()
     typeChess = menu.getSelectedChess()
@@ -146,11 +153,6 @@ while running:
         # Hiển thị hộp thoại điểm
         if game_over:
             gameControl.draw_game_over_dialog() 
-
-        #AI đưa ra nước đi
-        if board.current_turn == "AI":
-            board.ai_move()
-            board.current_turn = "Player"
 
     pygame.display.flip()
 

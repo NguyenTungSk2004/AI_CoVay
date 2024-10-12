@@ -17,8 +17,6 @@ class AI:
         for move in self.get_valid_moves(board_state, player):
             new_board_state = self.simulate_move(board_state, move, player)
             score = self.minimax(new_board_state, depth=2, player=-player)
-
-
             if (player == -1 and score > best_score) or (player == 1 and score < best_score):
                 best_score = score
                 best_move = move
@@ -43,9 +41,7 @@ class AI:
                 if board_state[enemy_x][enemy_y] != 0:
                     map_check = map_check + self.rule.get_neighbors(enemy_x,enemy_y, board_state)
 
-        print(map_check)
         for move_check in map_check:
-            print(move_check)
             x,y = move_check
             suicidal = self.rule.is_suicidal(board_state, x, y,player)
             repeated_state = self.rule.is_repeated_state(board_state,x,y,player)
