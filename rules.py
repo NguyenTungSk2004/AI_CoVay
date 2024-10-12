@@ -105,7 +105,6 @@ class Rules:
         # Nếu đây là nước đi đầu tiên, lưu bảng hiện tại và trả về True
         if self.current_board is None:
             self.current_board = board
-            print("Nuoc dau tien")
             return True
         
         # Nếu bảng hiện tại khác với bảng trước đó, cập nhật bảng trước đó và bảng hiện tại
@@ -115,11 +114,9 @@ class Rules:
 
         # Nếu bảng hiện tại giống với bảng trước đó, nước đi không hợp lệ
         if board == self.previous_board:
-            print("Nuoc di khong hop le")
             return False
 
         # Nếu không có vấn đề gì, nước đi hợp lệ
-        print("Nuoc di hop le")
         return True
     
     def is_repeated_state(self, board, x, y, typeChess):
@@ -222,11 +219,11 @@ class Rules:
         white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
         black_score = black_stones + black_territory  # Điểm của quân đen
 
-        print(f"Số quân trắng còn lại: {white_stones}")
-        print(f"Số quân đen còn lại: {black_stones}")
-        print(f"Lãnh thổ quân trắng: {white_territory}")
-        print(f"Lãnh thổ quân đen: {black_territory}")
-        print(f"Điểm của quân trắng (bao gồm cộng điểm): {white_score}")
-        print(f"Điểm của quân đen (bao gồm cộng điểm): {black_score}")
+        # print(f"Số quân trắng còn lại: {white_stones}")
+        # print(f"Số quân đen còn lại: {black_stones}")
+        # print(f"Lãnh thổ quân trắng: {white_territory}")
+        # print(f"Lãnh thổ quân đen: {black_territory}")
+        # print(f"Điểm của quân trắng (bao gồm cộng điểm): {white_score}")
+        # print(f"Điểm của quân đen (bao gồm cộng điểm): {black_score}")
         
         return 1 if white_score > black_score else -1, white_score, black_score

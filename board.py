@@ -1,7 +1,7 @@
 import pygame
 import color
 from rules import Rules
-
+from ai import AI
 class Board:
     def __init__(self, MyBoard, typeChess):
         self.size = MyBoard[0]
@@ -13,6 +13,7 @@ class Board:
         self.chessSize = MyBoard[4]
         self.typeChess = typeChess
         self.rule = Rules()
+        self.ai = AI()
 
         if (typeChess == -1 ): 
             self.current_turn = "Player"
@@ -46,7 +47,8 @@ class Board:
             self.board[x][y] = self.typeChess
             self.rule.capture_stones(self.board,-self.typeChess)
         
-    def ai_move(self, move):
+    def ai_move(self):
+        move = self.ai.get_next_move(self.board, -self.typeChess)
         # Đánh dấu nước đi của AI
         if move:
             x, y = move

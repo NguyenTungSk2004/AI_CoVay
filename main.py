@@ -1,9 +1,7 @@
 import pygame
 from board import Board
-from ai import AI
 from gameControl import GameControl
 from drawUI import Menu
-from rules import Rules
 
 from effect_game import start_game as Fighting
 from setup import init_screen, load_font, load_background
@@ -35,8 +33,7 @@ def initialize_game(screen, font, sizeGame, typeChess):
     typeChess = 1 if typeChess == "Trắng" else -1
     board = Board(choiceBoard[sizeGame], typeChess)
     gameControl = GameControl(screen, font, typeChess, player_name, board)
-    ai = AI()
-    return board, gameControl, ai
+    return board, gameControl
 
 # Khởi tạo các biến thông tin cơ bản
 allChess = ["Đen", "Trắng"]
@@ -46,7 +43,7 @@ typeChess = None
 sizeGame = None
 input_active = False
 play_active = False
-board, gameControl, ai = None, None, None
+board, gameControl = None, None
 
 skipForGame = 0
 
@@ -88,9 +85,9 @@ while running:
                     elif event.button ==1 and board.current_turn == "Player":
                         board.player_move(pos)
                         skipForGame = 0
-                    elif event.button == 3 and board.current_turn == "AI":
-                        board.test_ai_click(pos)
-                        skipForGame = 0
+                    # elif event.button == 3 and board.current_turn == "AI":
+                    #     board.test_ai_click(pos)
+                    #     skipForGame = 0
             else:
                 # Xử lý sự kiện chuột cho hộp thoại kết thúc
                 print(f"Winner is ",board.whoIsWinner())
@@ -103,7 +100,7 @@ while running:
                     elif gameControl.getReplayButton().collidepoint(pos):
                         # Người chơi nhấn nút "Chơi lại"
                         game_over = False
-                        board, gameControl, ai = initialize_game(screen, font, sizeGame, typeChess)
+                        board, gameControl = initialize_game(screen, font, sizeGame, typeChess)
                         skipForGame = 0
 
         elif not play_active:
@@ -129,7 +126,7 @@ while running:
                 if menu.getPlayButton().collidepoint(event.pos):
                     font = load_font('tahoma', 20)
                     Fighting(screen, width, height)
-                    board, gameControl, ai = initialize_game(screen, font, sizeGame, typeChess)
+                    board, gameControl = initialize_game(screen, font, sizeGame, typeChess)
                     play_active = True
                     skipForGame = 0
 
@@ -141,7 +138,7 @@ while running:
                     player_name += event.unicode
                 menu.setPlayerName(player_name)
 
-    if play_active and board is not None and ai is not None:
+    if play_active and board is not None:
         # Vẽ bàn cờ
         board.draw(screen)
         gameControl.draw_scoreboard(height)
@@ -150,10 +147,10 @@ while running:
         if game_over:
             gameControl.draw_game_over_dialog() 
 
-       # AI đưa ra nước đi
-        # if board.current_turn == "AI":
-        #     ai_move = ai.get_move(board)
-        #     board.ai_move(ai_move)
+        #AI đưa ra nước đi
+        if board.current_turn == "AI":
+            board.ai_move()
+            board.current_turn = "Player"
 
     pygame.display.flip()
 

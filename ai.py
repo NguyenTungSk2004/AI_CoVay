@@ -1,6 +1,7 @@
+from rules import Rules
 class AI:
-    def __init__(self, board_size=9):
-        self.board_size = board_size
+    def __init__(self):
+        self.rule = Rules()
 
     def get_next_move(self, board_state, player):
         """
@@ -16,11 +17,12 @@ class AI:
         for move in self.get_valid_moves(board_state, player):
             new_board_state = self.simulate_move(board_state, move, player)
             score = self.minimax(new_board_state, depth=2, player=-player)
-            
+
+
             if (player == -1 and score > best_score) or (player == 1 and score < best_score):
                 best_score = score
                 best_move = move
-        
+                
         return best_move
 
     def get_valid_moves(self, board_state, player):
@@ -33,40 +35,23 @@ class AI:
         :return: Danh sách các nước đi hợp lệ (x, y).
         """
         valid_moves = []
-        for x in range(self.board_size):
-            for y in range(self.board_size):
-                if board_state[x][y] == 0 and self.is_valid_move(board_state, x, y, player):
-                    valid_moves.append((x, y))
+        map_check =[]
+        size = len(board_state)
+
+        for enemy_x in range(size):
+            for enemy_y in range(size):
+                if board_state[enemy_x][enemy_y] != 0:
+                    map_check = map_check + self.rule.get_neighbors(enemy_x,enemy_y, board_state)
+
+        print(map_check)
+        for move_check in map_check:
+            print(move_check)
+            x,y = move_check
+            suicidal = self.rule.is_suicidal(board_state, x, y,player)
+            repeated_state = self.rule.is_repeated_state(board_state,x,y,player)
+            if suicidal and repeated_state:
+                valid_moves.append((x, y))
         return valid_moves
-
-    def is_valid_move(self, board_state, x, y, player):
-        """
-        Kiểm tra xem nước đi có hợp lệ hay không (không bị chết).
-        
-        :param board_state: Ma trận 2D hiện tại.
-        :param x: Tọa độ x của nước đi.
-        :param y: Tọa độ y của nước đi.
-        :param player: Người chơi thực hiện nước đi (-1 hoặc 1).
-        :return: True nếu nước đi hợp lệ, ngược lại False.
-        """
-        directions = [
-            (-1,0), (1, 0), (0, -1), (0, 1)
-        ]
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if self.is_within_board(nx, ny) and not board_state[nx][ny] == -player:
-                return True
-        return False
-
-    def is_within_board(self, x, y):
-        """
-        Kiểm tra xem tọa độ có nằm trong bàn cờ hay không.
-        
-        :param x: Tọa độ x.
-        :param y: Tọa độ y.
-        :return: True nếu tọa độ nằm trong bàn cờ, ngược lại False.
-        """
-        return 0 <= x < self.board_size and 0 <= y < self.board_size
 
     def simulate_move(self, board_state, move, player):
         """
@@ -118,10 +103,8 @@ class AI:
         :param player: Người chơi hiện tại (-1 hoặc 1).
         :return: Điểm số của trạng thái bàn cờ.
         """
-        score = 0
-        for row in board_state:
-            score += sum(row)  # Tổng số quân cờ trên bàn
-        return score * player
+        winner,white_score, black_score = self.rule.who_win(board_state) 
+        return white_score if player == 1 else black_score
 
     def is_game_over(self, board_state):
         """
