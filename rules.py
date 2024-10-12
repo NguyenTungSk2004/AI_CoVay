@@ -177,15 +177,15 @@ class Rules:
                 for nx, ny in self.get_neighbors(cx, cy, board):
                     if board[nx][ny] == 0 and not visited[nx, ny]:
                         stack.append((nx, ny))
-                    elif board[nx][ny] == 1:
-                        surrounded_by_white = False
                     elif board[nx][ny] == -1:
+                        surrounded_by_white = False
+                    elif board[nx][ny] == 1:
                         surrounded_by_black = False
 
             if surrounded_by_black and not surrounded_by_white:
-                return 1, territory_size  # Bao quanh bởi quân trắng
-            elif surrounded_by_white and not surrounded_by_black:
                 return -1, territory_size  # Bao quanh bởi quân đen
+            elif surrounded_by_white and not surrounded_by_black:
+                return 1, territory_size  # Bao quanh bởi quân trắng
             return 0, territory_size  # Không thuộc lãnh thổ ai
 
         for i in range(len(board)):
@@ -222,4 +222,11 @@ class Rules:
         white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
         black_score = black_stones + black_territory  # Điểm của quân đen
 
+        print(f"Số quân trắng còn lại: {white_stones}")
+        print(f"Số quân đen còn lại: {black_stones}")
+        print(f"Lãnh thổ quân trắng: {white_territory}")
+        print(f"Lãnh thổ quân đen: {black_territory}")
+        print(f"Điểm của quân trắng (bao gồm cộng điểm): {white_score}")
+        print(f"Điểm của quân đen (bao gồm cộng điểm): {black_score}")
+        
         return 1 if white_score > black_score else -1, white_score, black_score
