@@ -23,16 +23,8 @@ class AI:
 
         for move in self.get_valid_moves(board_state, player):
             new_board_state = self.simulate_move(board_state, move, player)
-            score, board = self.minimax(new_board_state, depth=2, player=-player)
+            score = self.minimax(new_board_state, depth=2, player=-player)
             current_score = self.evaluate_board(new_board_state, player)
-
-            print("----------------------------------------------------------------")
-            for row in board:
-                print(row)
-            who, white, black = self.rule.who_win(board)
-            print(f"Winner is {who}, White score: {white}, Black score: {black}")
-            print("current score: ", current_score)
-            print(f"Move: {move}, Score: {score}")
 
             best_move, best_score = get_best_move(score, best_score, best_move, move)
             if score == best_score:
@@ -90,28 +82,23 @@ class AI:
         :return: Điểm số của trạng thái bàn cờ.
         """
         if depth == 0 or self.is_game_over(board_state):
-            return self.evaluate_board(board_state, player), board_state
+            return self.evaluate_board(board_state, player)
         
         if player == 1:  # Max player
             max_eval = self.evaluate_board(board_state, player)
-            board = board_state
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
-                eval, board_here = self.minimax(new_board_state, depth - 1, -player)
+                eval = self.minimax(new_board_state, depth - 1, -player)
                 max_eval = max(max_eval, eval)
-                if(max_eval == eval):
-                    board = board_here
-            return max_eval, board
+            return max_eval
         else:  # Min player
             min_eval = self.evaluate_board(board_state, player)
             board = board_state
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
-                eval,board_here = self.minimax(new_board_state, depth - 1, -player)
+                eval = self.minimax(new_board_state, depth - 1, -player)
                 min_eval = min(min_eval, eval)
-                if(min_eval == eval):
-                    board = board_here
-            return min_eval, board
+            return min_eval
 
     def evaluate_board(self, board_state, player):
         """
@@ -134,26 +121,37 @@ class AI:
         return len(self.get_valid_moves(board_state, player=-1)) == 0 and len(self.get_valid_moves(board_state, player=1)) == 0
 
 
-board_size = 5  # Kích thước bàn cờ 5x5
+import time 
+board_size = 9  # Kích thước bàn cờ 5x5
 go_ai = AI()
 
-# Khởi tạo bàn cờ trống
-# initial_board_state = [
-#     [0, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0],
-#     [0, 1, 1, 0, 0],
-#     [1, -1, 0, 1, 0]
-# ]
+initial_board_state = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, -1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, -1, 1, 0, 0, 0, 0, 0],
+]
 
 initial_board_state = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, -1, 1, 0, 0],
-    [0, 1, -1, 0, 0]
+    [0, 1, -1, 1, 0, 0, 0, 0, 0],
+    [0, -1, 0, 0, 0, 0, 0, 0, 0],
+    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, -1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, -1, 1, 0, 0, 0, 0, 0],
 ]
 
 player = -1
+start_time = time.time()
 best_move = go_ai.get_next_move(initial_board_state, player)
+end_time = time.time()
+print("Thời gian tính toán:", end_time - start_time)
 print(f"Nước đi tốt nhất cho quân {player}: {best_move}")
