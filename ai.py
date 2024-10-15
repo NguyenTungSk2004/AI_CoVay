@@ -11,16 +11,32 @@ class AI:
         :param player: Người chơi hiện tại (-1 là quân đen, 1 là quân trắng).
         :return: Tọa độ của nước đi tiếp theo (x, y).
         """
-        best_move = None
-        best_score = float('-inf') if player == -1 else float('inf')
-        
-        for move in self.get_valid_moves(board_state, player):
-            new_board_state = self.simulate_move(board_state, move, player)
-            score = self.minimax(new_board_state, depth=2, player=-player)
-            if (player == -1 and score > best_score) or (player == 1 and score < best_score):
+        def get_best_move(score, best_score, best_move, move):
+            if (player == -1 and score < best_score) or (player == 1 and score > best_score):
                 best_score = score
                 best_move = move
-                
+            return best_move, best_score
+
+        best_move = None
+        best_score = float('inf') if player == -1 else -float('inf')
+        best_current_score = float('inf') if player == -1 else -float('inf')
+
+        for move in self.get_valid_moves(board_state, player):
+            new_board_state = self.simulate_move(board_state, move, player)
+            score, board = self.minimax(new_board_state, depth=2, player=-player)
+            current_score = self.evaluate_board(new_board_state, player)
+
+            print("----------------------------------------------------------------")
+            for row in board:
+                print(row)
+            who, white, black = self.rule.who_win(board)
+            print(f"Winner is {who}, White score: {white}, Black score: {black}")
+            print("current score: ", current_score)
+            print(f"Move: {move}, Score: {score}")
+
+            best_move, best_score = get_best_move(score, best_score, best_move, move)
+            if score == best_score:
+                best_move, current_score = get_best_move(current_score, best_current_score, best_move, move)
         return best_move
 
     def get_valid_moves(self, board_state, player):
@@ -38,8 +54,8 @@ class AI:
 
         for enemy_x in range(size):
             for enemy_y in range(size):
-                if board_state[enemy_x][enemy_y] != 0:
-                    map_check = map_check + self.rule.get_neighbors(enemy_x,enemy_y, board_state)
+                if board_state[enemy_x][enemy_y] == 0:
+                    map_check.append((enemy_x, enemy_y))
 
         for move_check in map_check:
             x,y = move_check
@@ -61,6 +77,7 @@ class AI:
         new_board_state = [row[:] for row in board_state]
         x, y = move
         new_board_state[x][y] = player
+        self.rule.capture_stones(new_board_state, -player)
         return new_board_state
 
     def minimax(self, board_state, depth, player):
@@ -73,22 +90,28 @@ class AI:
         :return: Điểm số của trạng thái bàn cờ.
         """
         if depth == 0 or self.is_game_over(board_state):
-            return self.evaluate_board(board_state, player)
+            return self.evaluate_board(board_state, player), board_state
         
-        if player == -1:  # Max player
-            max_eval = float('-inf')
+        if player == 1:  # Max player
+            max_eval = self.evaluate_board(board_state, player)
+            board = board_state
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
-                eval = self.minimax(new_board_state, depth - 1, -player)
+                eval, board_here = self.minimax(new_board_state, depth - 1, -player)
                 max_eval = max(max_eval, eval)
-            return max_eval
+                if(max_eval == eval):
+                    board = board_here
+            return max_eval, board
         else:  # Min player
-            min_eval = float('inf')
+            min_eval = self.evaluate_board(board_state, player)
+            board = board_state
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
-                eval = self.minimax(new_board_state, depth - 1, -player)
+                eval,board_here = self.minimax(new_board_state, depth - 1, -player)
                 min_eval = min(min_eval, eval)
-            return min_eval
+                if(min_eval == eval):
+                    board = board_here
+            return min_eval, board
 
     def evaluate_board(self, board_state, player):
         """
@@ -100,8 +123,7 @@ class AI:
         :return: Điểm số của trạng thái bàn cờ.
         """
         winner,white_score, black_score = self.rule.who_win(board_state) 
-        return white_score if player == 1 else black_score
-
+        return white_score-black_score
     def is_game_over(self, board_state):
         """
         Kiểm tra xem game có kết thúc hay không (ví dụ khi hết nước đi).
@@ -112,18 +134,26 @@ class AI:
         return len(self.get_valid_moves(board_state, player=-1)) == 0 and len(self.get_valid_moves(board_state, player=1)) == 0
 
 
-# board_size = 5  # Kích thước bàn cờ 5x5
-# go_ai = AI(board_size)
+board_size = 5  # Kích thước bàn cờ 5x5
+go_ai = AI()
 
-# # Khởi tạo bàn cờ trống
+# Khởi tạo bàn cờ trống
 # initial_board_state = [
-#     [0, 1, 0, 0, 1],
-#     [-1, 1, -1, 1, -1],
-#     [1, 0, -1, 0, 0],
 #     [0, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0]
+#     [0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0],
+#     [0, 1, 1, 0, 0],
+#     [1, -1, 0, 1, 0]
 # ]
 
-# # Gọi hàm get_next_move để tìm nước đi tốt nhất cho quân đen (-1)
-# best_move = go_ai.get_next_move(initial_board_state, player=-1)
-# print(f"Nước đi tốt nhất cho quân đen (-1): {best_move}")
+initial_board_state = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, -1, 1, 0, 0],
+    [0, 1, -1, 0, 0]
+]
+
+player = -1
+best_move = go_ai.get_next_move(initial_board_state, player)
+print(f"Nước đi tốt nhất cho quân {player}: {best_move}")
