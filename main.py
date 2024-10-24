@@ -1,7 +1,7 @@
 import pygame
 from board import Board
 from gameControl import GameControl
-from drawUI import Menu
+from menu import Menu
 
 from effect_game import start_game as Fighting
 from setup import init_screen, load_font, load_background
@@ -25,7 +25,9 @@ background_image = load_background('Nencv.jpg', width, height)
 choiceBoard = {
     "19x19": (19,'19x19board.jpg', 31.3, 20, 12),
     "13x13": (13,'13x13board.png', 45.5, 27, 17), # Các ae tự sửa chỗ này theo ảnh bàn cờ 
-    "9x9": (9,'9x9board.png', 66, 35, 22) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+    "9x9": (9,'9x9board.png', 66, 35, 22), # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+    "7x7": (7,'7x7board.png', 83.5, 50, 30), # Các ae tự sửa chỗ này theo ảnh bàn cờ 
+    "5x5": (5,'5x5board.png', 115, 70, 40) # Các ae tự sửa chỗ này theo ảnh bàn cờ 
 }
 
 # Khởi tạo cấu hình trò chơi
@@ -37,7 +39,8 @@ def initialize_game(screen, font, sizeGame, typeChess):
 
 # Khởi tạo các biến thông tin cơ bản
 allChess = ["Đen", "Trắng"]
-board_sizes = ["9x9", "13x13", "19x19"]
+# board_sizes = ["5x5","7x7","9x9", "13x13", "19x19"]
+board_sizes = ["5x5","7x7","9x9"]
 player_name = ""
 typeChess = None
 sizeGame = None
@@ -59,6 +62,7 @@ while running:
         #AI đưa ra nước đi
         if board.current_turn == "AI":
             board.ai_move()
+            print(f"Winner is ",board.whoIsWinner())
             board.current_turn = "Player"
 
     input_box = menu.getInputBox()
@@ -91,13 +95,13 @@ while running:
                         game_over = True
                     elif event.button ==1 and board.current_turn == "Player":
                         board.player_move(pos)
+                        print(f"Winner is ",board.whoIsWinner())
                         skipForGame = 0
                     # elif event.button == 3 and board.current_turn == "AI":
                     #     board.test_ai_click(pos)
                     #     skipForGame = 0
             else:
                 # Xử lý sự kiện chuột cho hộp thoại kết thúc
-                print(f"Winner is ",board.whoIsWinner())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     if gameControl.getExitButton().collidepoint(pos):

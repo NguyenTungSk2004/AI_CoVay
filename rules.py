@@ -70,7 +70,7 @@ class Rules:
 
     def is_suicidal(self, board_real, x, y, typeChess):
         """
-            Kiểm tra xem nước đi (x, y) có hợp lệ không.
+            Kiểm tra xem nước đi (x, y) có tự tử hay khô.
 
             :param board: Ma trận 2D đại diện cho bàn cờ.
             :param row: Chỉ số hàng của nước đi.
@@ -218,12 +218,5 @@ class Rules:
         white_stones, black_stones = self.count_stones(board)
         white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
         black_score = black_stones + black_territory  # Điểm của quân đen
-
-        # print(f"Số quân trắng còn lại: {white_stones}")
-        # print(f"Số quân đen còn lại: {black_stones}")
-        # print(f"Lãnh thổ quân trắng: {white_territory}")
-        # print(f"Lãnh thổ quân đen: {black_territory}")
-        # print(f"Điểm của quân trắng (bao gồm cộng điểm): {white_score}")
-        # print(f"Điểm của quân đen (bao gồm cộng điểm): {black_score}")
         
         return 1 if white_score > black_score else -1, white_score, black_score

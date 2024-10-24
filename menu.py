@@ -1,5 +1,4 @@
 import pygame
-import sys
 import color
 from setup import draw_text
 
@@ -14,16 +13,15 @@ class Menu:
         self.play_button = pygame.Rect(250, 320, 100, 50)
 
         BlackChess, WhiteChess = [pygame.Rect(270 + i * 150, 180, 100, 40) for i in range(2)]
-        button_9x9, button_13x13, button_19x19 = [pygame.Rect(295 + i * 150, 250, 100, 40) for i in range(3)]
-
+        button_5x5, button_7x7, button_9x9 = [pygame.Rect(295 + i * 150, 250, 100, 40) for i in range(3)]
         self.allChess = {
             "Đen": BlackChess,
             "Trắng": WhiteChess
         }
         self.board_sizes = {
+            "5x5": button_5x5,
+            "7x7": button_7x7,
             "9x9": button_9x9,
-            "13x13": button_13x13,
-            "19x19": button_19x19
         }
 
         # Khởi tạo các biến nhận dữ liệu
@@ -86,16 +84,14 @@ class Menu:
     def draw_color_selection(self):
         draw_text('Chọn loại quân:', self.font, color.WHITE, self.screen, 50, 180)
         for i, chess in enumerate(self.allChess):
-            pygame.draw.rect(self.screen, color.GRAY if self.selected_chess == chess else color.WHITE, 
-                             (270 + i * 150, 180, 100, 40))
+            pygame.draw.rect(self.screen, color.GRAY if self.selected_chess == chess else color.WHITE, (270 + i * 150, 180, 100, 40))
             draw_text(chess, self.font, color.BLACK, self.screen, 280 + i * 150, 180)
 
     # Hàm vẽ lựa chọn kích thước bàn
     def draw_board_size_selection(self):
         draw_text('Chọn kích cỡ bàn:', self.font, color.WHITE, self.screen, 50, 250)
         for i, size in enumerate(self.board_sizes):
-            pygame.draw.rect(self.screen, color.GRAY if self.selected_board_size == size else color.WHITE,
-                             (295 + i * 150, 250, 100, 40))
+            pygame.draw.rect(self.screen, color.GRAY if self.selected_board_size == size else color.WHITE, (295 + i * 150, 250, 100, 40))
             draw_text(size, self.font, color.BLACK, self.screen, 305 + i * 150, 250)
 
    # Hàm vẽ nút thoát

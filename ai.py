@@ -46,7 +46,7 @@ class AI:
 
         for enemy_x in range(size):
             for enemy_y in range(size):
-                if board_state[enemy_x][enemy_y] == 0:
+                if board_state[enemy_x][enemy_y] != 0:
                     map_check.append((enemy_x, enemy_y))
 
         for move_check in map_check:
@@ -93,7 +93,6 @@ class AI:
             return max_eval
         else:  # Min player
             min_eval = self.evaluate_board(board_state, player)
-            board = board_state
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
                 eval = self.minimax(new_board_state, depth - 1, -player)
@@ -121,37 +120,37 @@ class AI:
         return len(self.get_valid_moves(board_state, player=-1)) == 0 and len(self.get_valid_moves(board_state, player=1)) == 0
 
 
-import time 
-board_size = 9  # Kích thước bàn cờ 5x5
-go_ai = AI()
+# import time 
+# board_size = 9  # Kích thước bàn cờ 5x5
+# go_ai = AI()
 
-initial_board_state = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, -1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, -1, 1, 0, 0, 0, 0, 0],
-]
+# initial_board_state = [
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, -1, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 1, -1, 1, 0, 0, 0, 0, 0],
+# ]
 
-initial_board_state = [
-    [0, 1, -1, 1, 0, 0, 0, 0, 0],
-    [0, -1, 0, 0, 0, 0, 0, 0, 0],
-    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, -1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, -1, 1, 0, 0, 0, 0, 0],
-]
+# # initial_board_state = [
+# #     [0, 1, -1, 1, 0, 0, 0, 0, 0],
+# #     [0, -1, 0, 0, 0, 0, 0, 0, 0],
+# #     [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+# #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+# #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+# #     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+# #     [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+# #     [0, -1, 0, 0, 0, 0, 0, 0, 0],
+# #     [0, 1, -1, 1, 0, 0, 0, 0, 0],
+# # ]
 
-player = -1
-start_time = time.time()
-best_move = go_ai.get_next_move(initial_board_state, player)
-end_time = time.time()
-print("Thời gian tính toán:", end_time - start_time)
-print(f"Nước đi tốt nhất cho quân {player}: {best_move}")
+# player = 1
+# start_time = time.time()
+# best_move = go_ai.get_next_move(initial_board_state, player)
+# end_time = time.time()
+# print("Thời gian tính toán:", end_time - start_time)
+# print(f"Nước đi tốt nhất cho quân {player}: {best_move}")
