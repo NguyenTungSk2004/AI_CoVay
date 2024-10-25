@@ -214,9 +214,51 @@ class Rules:
             Returns:
             tuple: (1 nếu quân trắng thắng, -1 nếu quân đen thắng, điểm của quân trắng, điểm của quân đen)
         """
-        white_territory, black_territory = self.count_territory(board)
-        white_stones, black_stones = self.count_stones(board)
+        board_real = [row[:] for row in board]
+        board_real = self.batQuanChet(board_real)
+        white_territory, black_territory = self.count_territory(board_real)
+        white_stones, black_stones = self.count_stones(board_real)
         white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
         black_score = black_stones + black_territory  # Điểm của quân đen
         
         return 1 if white_score > black_score else -1, white_score, black_score
+
+    def DemKhi(self, board, row, col):
+        """
+            Kiểm tra xem nhóm quân cờ tại vị trí (row, col) có bị bắt hay không.
+
+            :param board: Ma trận 2D đại diện cho bàn cờ.
+            :param row: Chỉ số hàng của ô hiện tại.
+            :param col: Chỉ số cột của ô hiện tại.
+            :return: Tuple số lượng khí và danh sách các ô khí
+        """
+        color = board[row][col]
+        visited = set()
+        to_visit = [(row, col)]
+
+        ki = []
+        dem = 0
+        while to_visit:
+            current = to_visit.pop()
+            visited.add(current)
+            
+            for neighbor in self.get_neighbors(current[0], current[1], board):
+                r, c = neighbor
+                if board[r][c] == color and neighbor not in visited:
+                    to_visit.append(neighbor)
+                elif board[r][c] == 0:  # Nếu có khí (ô trống)
+                    dem+=1
+                    ki.append((r,c))
+        return dem,ki
+
+
+    def batQuanChet(self,board):
+        for row in range(len(board)):
+            for col in range(len(board)):
+                if board[row][col] != 0:
+                    soLuongKhi,ki = self.DemKhi(board, row, col)
+                    if soLuongKhi == 1:
+                        r,c = ki[0][0],ki[0][1]
+                        board[r][c] = -board[row][col]
+                        self.capture_stones(board, board[row][col])
+        return board
