@@ -24,7 +24,7 @@ class AI:
         for move in self.get_valid_moves(board_state, player):
             new_board_state = self.simulate_move(board_state, move, player)
             score = self.minimax(new_board_state, depth=2, player=-player)
-            current_score = self.evaluate_board(new_board_state, player)
+            current_score = self.evaluate_board(new_board_state)
 
             best_move, best_score = get_best_move(score, best_score, best_move, move)
             if score == best_score:
@@ -46,7 +46,7 @@ class AI:
 
         for enemy_x in range(size):
             for enemy_y in range(size):
-                if board_state[enemy_x][enemy_y] != 0:
+                if board_state[enemy_x][enemy_y] == 0:
                     map_check.append((enemy_x, enemy_y))
 
         for move_check in map_check:
@@ -82,30 +82,29 @@ class AI:
         :return: Điểm số của trạng thái bàn cờ.
         """
         if depth == 0 or self.is_game_over(board_state):
-            return self.evaluate_board(board_state, player)
+            return self.evaluate_board(board_state)
         
         if player == 1:  # Max player
-            max_eval = self.evaluate_board(board_state, player)
+            max_eval = self.evaluate_board(board_state)
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
                 eval = self.minimax(new_board_state, depth - 1, -player)
                 max_eval = max(max_eval, eval)
             return max_eval
         else:  # Min player
-            min_eval = self.evaluate_board(board_state, player)
+            min_eval = self.evaluate_board(board_state)
             for move in self.get_valid_moves(board_state, player):
                 new_board_state = self.simulate_move(board_state, move, player)
                 eval = self.minimax(new_board_state, depth - 1, -player)
                 min_eval = min(min_eval, eval)
             return min_eval
 
-    def evaluate_board(self, board_state, player):
+    def evaluate_board(self, board_state):
         """
         Hàm đánh giá trạng thái bàn cờ.
         Hiện tại chỉ đơn giản dựa trên số quân cờ của người chơi.
         
         :param board_state: Ma trận 2D hiện tại.
-        :param player: Người chơi hiện tại (-1 hoặc 1).
         :return: Điểm số của trạng thái bàn cờ.
         """
         winner,white_score, black_score = self.rule.who_win(board_state) 
