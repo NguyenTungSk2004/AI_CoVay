@@ -61,9 +61,12 @@ while running:
     if play_active:
         #AI đưa ra nước đi
         if board.current_turn == "AI":
-            board.ai_move()
-            print(f"Winner is ",board.whoIsWinner())
-            board.current_turn = "Player"
+            check_ai_move = board.ai_move()
+            if not check_ai_move:
+                skipForGame +=1
+                if skipForGame == 2: game_over = True
+                print("Ai Skipped")
+            print(f"AI is ",board.whoIsWinner())
 
     input_box = menu.getInputBox()
     player_name = menu.getPlayerName()
@@ -95,7 +98,7 @@ while running:
                         game_over = True
                     elif event.button ==1 and board.current_turn == "Player":
                         board.player_move(pos)
-                        print(f"Winner is ",board.whoIsWinner())
+                        print(f"Player is ",board.whoIsWinner())
                         skipForGame = 0
                     # elif event.button == 3 and board.current_turn == "AI":
                     #     board.test_ai_click(pos)

@@ -58,8 +58,11 @@ class Board:
                 self.current_turn = "Player"
                 self.board[x][y] = -self.typeChess  
                 self.rule.capture_stones(self.board,self.typeChess)
-
-    
+            return True
+        elif move == None:
+            self.current_turn = "Player"
+            return False
+        
     def test_ai_click(self, move):
         # Đánh dấu nước đi của AI
         if move:

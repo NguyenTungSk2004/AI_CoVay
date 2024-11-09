@@ -109,7 +109,7 @@ class AI:
         :param player: Người chơi hiện tại (-1 hoặc 1).
         :return: Điểm số của trạng thái bàn cờ.
         """
-        winner,white_score, black_score = self.rule.who_win(board_state) 
+        white_score, black_score = self.rule.who_win(board_state) 
         return white_score-black_score
     def is_game_over(self, board_state):
         """

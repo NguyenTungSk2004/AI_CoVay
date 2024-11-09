@@ -3,8 +3,8 @@ class Rules:
 
     def __init__(self):
         # Trạng thái phụ thuộc của luật KO
-        self.current_board = None  
-        self.previous_board = None  
+        self.currentBoard = None  
+        self.previousBoard = None  
         
     def get_neighbors(self, row, col, board):
         """
@@ -15,7 +15,7 @@ class Rules:
             :param board: Ma trận 2D đại diện cho bàn cờ.
             :return: Danh sách các ô lân cận hợp lệ (trong phạm vi bàn cờ).
         """
-        board_size = len(board)
+        boardSize = len(board)
         neighbors = [
             (row-1, col),  # top
             (row+1, col),  # bottom
@@ -23,7 +23,7 @@ class Rules:
             (row, col+1)   # right
         ]
         # Lọc ra những ô lân cận hợp lệ
-        return [(r, c) for r, c in neighbors if 0 <= r < board_size and 0 <= c < board_size]
+        return [(r, c) for r, c in neighbors if 0 <= r < boardSize and 0 <= c < boardSize]
 
     def is_captured(self, board, row, col):
         """
@@ -37,16 +37,16 @@ class Rules:
         """
         color = board[row][col]
         visited = set()
-        to_visit = [(row, col)]
+        toVisited = [(row, col)]
         
-        while to_visit:
-            current = to_visit.pop()
+        while toVisited:
+            current = toVisited.pop()
             visited.add(current)
             
             for neighbor in self.get_neighbors(current[0], current[1], board):
                 r, c = neighbor
                 if board[r][c] == color and neighbor not in visited:
-                    to_visit.append(neighbor)
+                    toVisited.append(neighbor)
                 elif board[r][c] == 0:  # Nếu có khí (ô trống)
                     return False, visited  # Không bị bắt
         return True, visited  # Không còn khí, quân bị bắt
@@ -68,9 +68,9 @@ class Rules:
                         for chess in groupChess:
                             board[chess[0]][chess[1]] = 0  # Loại bỏ quân bị bắt
 
-    def is_suicidal(self, board_real, x, y, typeChess):
+    def is_suicidal(self, boardReal, x, y, typeChess):
         """
-            Kiểm tra xem nước đi (x, y) có tự tử hay khô.
+            Kiểm tra xem nước đi (x, y) có tự tử hay không.
 
             :param board: Ma trận 2D đại diện cho bàn cờ.
             :param row: Chỉ số hàng của nước đi.
@@ -79,41 +79,41 @@ class Rules:
             :return: True nếu nước đi hợp lệ, ngược lại False.
         """
 
-        board = [row[:] for row in board_real]
+        board = [row[:] for row in boardReal]
         size = len(board)
         if not (0 <= x < size and 0 <= y < size and board[x][y] == 0):
             return False
         board[x][y] = typeChess  
         self.capture_stones(board,-typeChess)
-        not_alive, visited = self.is_captured(board, x, y)
+        notAlive, visited = self.is_captured(board, x, y)
 
-        return not not_alive
+        return not notAlive
     
-    def check_duplicate(self, board_real):
+    def check_duplicate(self, boardReal):
         """
             Kiểm tra xem nước đi có bị trùng lặp hay không.
 
             Parameters:
-            board_real (list): Bảng hiện tại của trò chơi.
+            boardReal (list): Bảng hiện tại của trò chơi.
 
             Returns:
             bool: Trả về True nếu nước đi hợp lệ, False nếu nước đi không hợp lệ.
         """
         # Tạo một bản sao của bảng hiện tại
-        board = [row[:] for row in board_real]
+        board = [row[:] for row in boardReal]
         
         # Nếu đây là nước đi đầu tiên, lưu bảng hiện tại và trả về True
-        if self.current_board is None:
-            self.current_board = board
+        if self.currentBoard is None:
+            self.currentBoard = board
             return True
         
         # Nếu bảng hiện tại khác với bảng trước đó, cập nhật bảng trước đó và bảng hiện tại
-        if board != self.previous_board: 
-            self.previous_board = self.current_board
-            self.current_board = board
+        if board != self.previousBoard: 
+            self.previousBoard = self.currentBoard
+            self.currentBoard = board
 
         # Nếu bảng hiện tại giống với bảng trước đó, nước đi không hợp lệ
-        if board == self.previous_board:
+        if board == self.previousBoard:
             return False
 
         # Nếu không có vấn đề gì, nước đi hợp lệ
@@ -151,7 +151,7 @@ class Rules:
             :return: Số lượng lãnh thổ của quân trắng và quân đen.
         """
         visited = np.zeros_like(board, dtype=bool)
-        white_territory = black_territory = 0
+        whiteTerritory = blackTerritory = 0
 
         def is_surrounded(x, y):
             """
@@ -161,40 +161,40 @@ class Rules:
                 :return: 1 nếu bao quanh bởi quân trắng, -1 nếu bao quanh bởi quân đen, 0 nếu không thuộc ai.
             """
             stack = [(x, y)]
-            surrounded_by_black = surrounded_by_white = True
-            territory_size = 0
+            surroundedByBlack = surroundedByWhite = True
+            territorySize = 0
 
             while stack:
                 cx, cy = stack.pop()
                 if visited[cx, cy]:
                     continue
                 visited[cx, cy] = True
-                territory_size += 1
+                territorySize += 1
 
                 for nx, ny in self.get_neighbors(cx, cy, board):
                     if board[nx][ny] == 0 and not visited[nx, ny]:
                         stack.append((nx, ny))
                     elif board[nx][ny] == -1:
-                        surrounded_by_white = False
+                        surroundedByWhite = False
                     elif board[nx][ny] == 1:
-                        surrounded_by_black = False
+                        surroundedByBlack = False
 
-            if surrounded_by_black and not surrounded_by_white:
-                return -1, territory_size  # Bao quanh bởi quân đen
-            elif surrounded_by_white and not surrounded_by_black:
-                return 1, territory_size  # Bao quanh bởi quân trắng
-            return 0, territory_size  # Không thuộc lãnh thổ ai
+            if surroundedByBlack and not surroundedByWhite:
+                return -1, territorySize  # Bao quanh bởi quân đen
+            elif surroundedByWhite and not surroundedByBlack:
+                return 1, territorySize  # Bao quanh bởi quân trắng
+            return 0, territorySize  # Không thuộc lãnh thổ ai
 
         for i in range(len(board)):
             for j in range(len(board)):
                 if board[i][j] == 0 and not visited[i, j]:
-                    owner, territory_size = is_surrounded(i, j)
+                    owner, territorySize = is_surrounded(i, j)
                     if owner == 1:
-                        white_territory += territory_size
+                        whiteTerritory += territorySize
                     elif owner == -1:
-                        black_territory += territory_size
+                        blackTerritory += territorySize
 
-        return white_territory, black_territory
+        return whiteTerritory, blackTerritory
 
     def count_stones(self, board):
         """
@@ -214,14 +214,14 @@ class Rules:
             Returns:
             tuple: (1 nếu quân trắng thắng, -1 nếu quân đen thắng, điểm của quân trắng, điểm của quân đen)
         """
-        board_real = [row[:] for row in board]
-        board_real = self.batQuanChet(board_real)
-        white_territory, black_territory = self.count_territory(board_real)
-        white_stones, black_stones = self.count_stones(board_real)
-        white_score = white_stones + white_territory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
-        black_score = black_stones + black_territory  # Điểm của quân đen
+        boardReal = [row[:] for row in board]
+        boardReal = self.batQuanChet(boardReal)
+        whiteTerritory, blackTerritory = self.count_territory(boardReal)
+        whiteStones, blackStones = self.count_stones(boardReal)
+        whiteScore = whiteStones + whiteTerritory + 3.75  # Cộng thêm 3.75 điểm cho bên trắng
+        blackScore = blackStones + blackTerritory  # Điểm của quân đen
         
-        return 1 if white_score > black_score else -1, white_score, black_score
+        return whiteScore, blackScore
 
     def DemKhi(self, board, row, col):
         """
@@ -234,18 +234,18 @@ class Rules:
         """
         color = board[row][col]
         visited = set()
-        to_visit = [(row, col)]
+        toVisited = [(row, col)]
 
         ki = []
         dem = 0
-        while to_visit:
-            current = to_visit.pop()
+        while toVisited:
+            current = toVisited.pop()
             visited.add(current)
             
             for neighbor in self.get_neighbors(current[0], current[1], board):
                 r, c = neighbor
                 if board[r][c] == color and neighbor not in visited:
-                    to_visit.append(neighbor)
+                    toVisited.append(neighbor)
                 elif board[r][c] == 0:  # Nếu có khí (ô trống)
                     dem+=1
                     ki.append((r,c))
