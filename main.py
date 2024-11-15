@@ -66,6 +66,8 @@ while running:
                 skipForGame +=1
                 if skipForGame == 2: game_over = True
                 print("Ai Skipped")
+            else: 
+                skipForGame = 0
             print(f"AI is ",board.whoIsWinner())
 
     input_box = menu.getInputBox()
