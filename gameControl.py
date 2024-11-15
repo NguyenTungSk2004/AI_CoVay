@@ -1,6 +1,5 @@
 import pygame
 import color
-from ai import AI
 
 def draw_gradient_rect(surface, color1, color2, rect):
     """Draw a gradient rectangle."""
@@ -51,7 +50,7 @@ class GameControl:
             player_chess, ai_chess = color.BLACK, color.WHITE
 
         # Vẽ khung bên trái
-        draw_gradient_rect(self.screen, color.LIGHT_CYAN, color.DARK_CYAN, (600, 0, 200, height))
+        draw_gradient_rect(self.screen, color.LIGHT_BROWN, color.DARK_BROWN, (600, 0, 200, height))
 
         # Hiển thị tên người chơi
         player_text = self.font.render(self.player_name, True, color.BLACK)
@@ -91,17 +90,26 @@ class GameControl:
 
         # Hiển thị hộp thoại điểm của bạn
         pygame.draw.rect(screen, color.LIGHT_GRAY, (200, 150, 400, 300))
+
+        # Hiển thị tiêu đề "Game Over"
+        title_text = font.render("Game Over", True, color.BLACK)
+        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 180))
+        screen.blit(title_text, title_rect) 
+    
+
         score_text = font.render(f"Your score: {self.player_score}", True, color.BLACK)
         screen.blit(score_text, (250, 200))
         ai_score_text = font.render(f"AI score: {self.ai_score}", True, color.BLACK)
         screen.blit(ai_score_text, (250, 250))
 
         # Vẽ nút "Thoát"
-        pygame.draw.rect(screen, color.DARK_RED, self.exit_button_rect)
         exit_text = font.render("Exit", True, color.WHITE)
-        screen.blit(exit_text, (270, 360))
+        self.exit_button_rect.width = exit_text.get_width() + 20
+        pygame.draw.rect(screen, color.DARK_RED, self.exit_button_rect)
+        screen.blit(exit_text, (self.exit_button_rect.x + 10, self.exit_button_rect.y + 10))
 
         # Vẽ nút "Chơi lại"
-        pygame.draw.rect(screen, color.DARK_GREEN, self.replay_button_rect)
         replay_text = font.render("Play Again", True, color.WHITE)
-        screen.blit(replay_text, (460, 360))
+        self.replay_button_rect.width = replay_text.get_width() + 20
+        pygame.draw.rect(screen, color.DARK_GREEN, self.replay_button_rect)
+        screen.blit(replay_text, (self.replay_button_rect.x + 10, self.replay_button_rect.y + 10))
