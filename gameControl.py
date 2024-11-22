@@ -1,6 +1,5 @@
 import pygame
 import color
-
 def draw_gradient_rect(surface, color1, color2, rect):
     """Draw a gradient rectangle."""
     x, y, w, h = rect
@@ -13,7 +12,7 @@ def draw_gradient_rect(surface, color1, color2, rect):
 
 
 class GameControl:
-    def __init__(self, screen, font, typeChess,player_name,board):
+    def __init__(self, screen, font, typeChess, player_name, board):
         # Thông số cần thiết
         self.screen = screen
         self.font = font
@@ -21,9 +20,10 @@ class GameControl:
 
         # Thông tin người chơi
         self.player_name = player_name  # Tên người chơi
-        self.player_score = 0  # Số quân ăn được của người chơi
-        self.ai_score = 0  # Số quân ăn được của AI
+        self.player_score = 0  # Khởi tạo điểm người chơi bằng 0
+        self.ai_score = 0  # Khởi tạo điểm AI bằng 0
         self.typeChess = typeChess # Quân cờ của người chơi
+        self.first_move_made = False  # Biến đánh dấu nước đi đầu tiên
 
         # Thông tin đối tượng hiển thị
         self.skip_button_rect = pygame.Rect(610, 480, 180, 50)  # Nút skip
@@ -43,8 +43,20 @@ class GameControl:
     def getSurrenderButton(self):
         return self.surrender_button_rect
 
-    def draw_scoreboard(self, height):
+    def update_scores(self):
+        """Cập nhật điểm số từ bảng"""
+        if self.first_move_made:  # Chỉ cập nhật điểm sau nước đi đầu tiên
+            self.player_score = self.board.whoIsWinner()[0]
+            self.ai_score = self.board.whoIsWinner()[1]
 
+    def set_first_move_made(self):
+        """Đánh dấu đã có nước đi đầu tiên"""
+        self.first_move_made = True
+
+    def draw_scoreboard(self, height):
+        # Cập nhật điểm số trước khi vẽ
+        self.update_scores()
+        
         player_chess, ai_chess = color.WHITE, color.BLACK
         if self.typeChess == -1:
             player_chess, ai_chess = color.BLACK, color.WHITE
@@ -55,7 +67,6 @@ class GameControl:
         # Hiển thị tên người chơi
         player_text = self.font.render(self.player_name, True, color.BLACK)
         self.screen.blit(player_text, (610, 10))
-
         # Hiển thị số quân ăn được của người chơi
         score_text = self.font.render(f": {self.player_score}", True, color.BLACK)
         pygame.draw.circle(self.screen, player_chess, (630, 65), 14)  # icon quân cờ
@@ -85,31 +96,66 @@ class GameControl:
         self.screen.blit(surrender_text, surrender_text_rect)
 
     def draw_game_over_dialog(self):
+        # Cập nhật điểm số cuối cùng
+        self.update_scores()
+        
         screen = self.screen
         font = self.font
 
-        # Hiển thị hộp thoại điểm của bạn
-        pygame.draw.rect(screen, color.LIGHT_GRAY, (200, 150, 400, 300))
+        # Vẽ khung ngoài màu xám đậm
+        outer_rect = pygame.Rect(180, 130, 440, 340)
+        pygame.draw.rect(screen, (60, 60, 60), outer_rect)  # Xám đậm
+        
+        # Vẽ khung trong với gradient xám
+        inner_rect = pygame.Rect(190, 140, 420, 320)
+        draw_gradient_rect(screen, (120, 120, 120), (80, 80, 80), inner_rect)  # Gradient từ xám nhạt đến xám đậm
 
-        # Hiển thị tiêu đề "Game Over"
-        title_text = font.render("Game Over", True, color.BLACK)
+        # Sử dụng font Emulogic cho Game Over với size nhỏ hơn
+        try:
+            game_over_font = pygame.font.Font("Emulogic.ttf", 30)  # Giảm size xuống 30
+            title_text = game_over_font.render("GAME OVER", True, (255, 0, 0))
+        except:
+            # Fallback nếu không tìm thấy file font
+            game_over_font = pygame.font.Font(None, 50)  # Giảm size tương ứng cho font mặc định
+            title_text = game_over_font.render("GAME OVER", True, (255, 0, 0))
+        
         title_rect = title_text.get_rect(center=(screen.get_width() // 2, 180))
-        screen.blit(title_text, title_rect) 
-    
+        screen.blit(title_text, title_rect)
 
-        score_text = font.render(f"Your score: {self.player_score}", True, color.BLACK)
-        screen.blit(score_text, (250, 200))
-        ai_score_text = font.render(f"AI score: {self.ai_score}", True, color.BLACK)
-        screen.blit(ai_score_text, (250, 250))
+        # Xác định người chiến thắng
+        winner_text = ""
+        if self.player_score > self.ai_score:
+            winner_text = f"{self.player_name} Win!"
+        elif self.player_score < self.ai_score:
+            winner_text = "AI Win!"
+        else:
+            winner_text = "Draw!"
 
-        # Vẽ nút "Thoát"
+        # Hiển thị người chiến thắng với màu nổi bật
+        winner_surface = font.render(winner_text, True, (0, 0, 255))  # Giữ nguyên màu xanh dương
+        winner_rect = winner_surface.get_rect(center=(screen.get_width() // 2, 250))
+        screen.blit(winner_surface, winner_rect)
+
+        # Hiển thị điểm số với màu vàng nhạt để nổi bật trên nền xám
+        score_text = font.render(f"Your score: {self.player_score}", True, (255, 255, 150))  # Màu vàng nhạt
+        score_rect = score_text.get_rect(center=(screen.get_width() // 2, 300))
+        screen.blit(score_text, score_rect)
+        
+        ai_score_text = font.render(f"AI score: {self.ai_score}", True, (255, 255, 150))  # Màu vàng nhạt
+        ai_score_rect = ai_score_text.get_rect(center=(screen.get_width() // 2, 340))
+        screen.blit(ai_score_text, ai_score_rect)
+
+        # Vẽ các nút với vị trí và kích thước mới
+        # Nút "Thoát"
         exit_text = font.render("Exit", True, color.WHITE)
-        self.exit_button_rect.width = exit_text.get_width() + 20
+        self.exit_button_rect = pygame.Rect(250, 380, exit_text.get_width() + 40, 50)
         pygame.draw.rect(screen, color.DARK_RED, self.exit_button_rect)
-        screen.blit(exit_text, (self.exit_button_rect.x + 10, self.exit_button_rect.y + 10))
+        exit_rect = exit_text.get_rect(center=self.exit_button_rect.center)
+        screen.blit(exit_text, exit_rect)
 
-        # Vẽ nút "Chơi lại"
+        # Nút "Chơi lại"
         replay_text = font.render("Play Again", True, color.WHITE)
-        self.replay_button_rect.width = replay_text.get_width() + 20
+        self.replay_button_rect = pygame.Rect(450, 380, replay_text.get_width() + 40, 50)
         pygame.draw.rect(screen, color.DARK_GREEN, self.replay_button_rect)
-        screen.blit(replay_text, (self.replay_button_rect.x + 10, self.replay_button_rect.y + 10))
+        replay_rect = replay_text.get_rect(center=self.replay_button_rect.center)
+        screen.blit(replay_text, replay_rect)
