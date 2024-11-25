@@ -23,23 +23,29 @@ class AI:
         mapMove = {}
         validMoves = self.get_valid_moves(boardState, AI)
 
-        if self.ai_skip(boardState, validMoves, AI): return None 
-
         for move in validMoves:
             newBoardState = self.simulate_move(boardState, move, AI)
             currentScore = self.evaluate_board(newBoardState)
-            score, board = self.minimax(newBoardState, currentScore, depth=2, AI=-AI)
+            score, board = self.minimax(newBoardState, depth=2, AI=-AI)
             bestScore = get_best_move(score, bestScore)
 
             mapMove[move] = score
 
+
+        
         for move in mapMove:
             if mapMove[move] == bestScore:
                 bestMove.append(move)
 
         result = None
+        checkResult = set()
         if bestMove:
             result = random.choice(bestMove) 
+            while self.check_ai_skip(boardState, result, AI):
+                if not result in checkResult: checkResult.add(result)
+                result = random.choice(bestMove)
+                if len(checkResult) == len(bestMove):
+                    return None
         return result
 
     def get_valid_moves(self, boardState, AI):
@@ -78,42 +84,42 @@ class AI:
         self.rule.capture_stones(newBoardState, -AI)
         return newBoardState
 
-    def minimax(self, boardState, currentScore, depth, AI):
+    def minimax(self, boardState, depth, AI):
         """
-        Thuật toán Minimax để tìm nước đi tốt nhất (sử dụng vòng lặp thay vì đệ quy).
+        Thuật toán Minimax để tìm nước đi tốt nhất (sử dụng đệ quy).
         
         :param boardState: Ma trận 2D hiện tại.
         :param depth: Độ sâu tìm kiếm.
         :param AI: Người chơi hiện tại (-1 hoặc 1).
         :return: Điểm số của trạng thái bàn cờ.
         """
-        stack = [(boardState, depth, AI)]
-        bestScore = currentScore
-        board = boardState
-        while stack:
-            currentBoard, currentDepth, currentAI = stack.pop()
+        if depth == 0:
+            return self.evaluate_board(boardState), boardState
 
-            if currentDepth == 0:
-                score = self.evaluate_board(currentBoard)
-                bestScore = max(bestScore, score) if AI == 1 else min(bestScore, score)
-                board = currentBoard
-                continue
+        validMoves = self.get_valid_moves(boardState, AI)
+        if not validMoves:
+            return self.evaluate_board(boardState), boardState
 
-            if currentAI == 1:  # Max AI
-                maxEval = bestScore
-                for move in self.get_valid_moves(currentBoard, currentAI):
-                    newBoardState = self.simulate_move(currentBoard, move, currentAI)
-                    stack.append((newBoardState, currentDepth - 1, -currentAI))
-                    maxEval = max(maxEval, bestScore)
-                bestScore = max(bestScore, maxEval)
-            else:  # Min AI
-                minEval = bestScore
-                for move in self.get_valid_moves(currentBoard, currentAI):
-                    newBoardState = self.simulate_move(currentBoard, move, currentAI)
-                    stack.append((newBoardState, currentDepth - 1, -currentAI))
-                    minEval = min(minEval, bestScore)
-                bestScore = min(bestScore, minEval)
-        return bestScore, board
+        if AI == 1:  # Max AI
+            maxEval = -float('inf')
+            bestBoard = None
+            for move in validMoves:
+                newBoardState = self.simulate_move(boardState, move, AI)
+                eval, _ = self.minimax(newBoardState, depth - 1, -AI)
+                if eval > maxEval:
+                    maxEval = eval
+                    bestBoard = newBoardState
+            return maxEval, bestBoard
+        else:  # Min AI
+            minEval = float('inf')
+            bestBoard = None
+            for move in validMoves:
+                newBoardState = self.simulate_move(boardState, move, AI)
+                eval, _ = self.minimax(newBoardState, depth - 1, -AI)
+                if eval < minEval:
+                    minEval = eval
+                    bestBoard = newBoardState
+            return minEval, bestBoard
 
     def evaluate_board(self, boardState):
         """
@@ -126,22 +132,19 @@ class AI:
         whiteScore, blackScore = self.rule.who_win(boardState) 
         return whiteScore-blackScore
     
-    def ai_skip(self, boardState, validMoves, AI):
-        whiteStones, blackStones = self.rule.count_stones(boardState)
-        currentStones = whiteStones if AI == 1 else blackStones
-        currentScore = self.evaluate_board(boardState)
-
-        for move in validMoves:
-            newBoardState = self.simulate_move(boardState, move, AI)
-            white, black = self.rule.count_stones(newBoardState)
-            newStones = white if AI == 1 else black
-            newScore = self.evaluate_board(newBoardState)
-
-            if not (newStones > currentStones and newScore > currentScore) and AI == 1:
-                return False
-            if not (newStones > currentStones and newScore < currentScore) and AI == -1:
-                return False
-        return True
+    def check_ai_skip(self,boardState, move, AI):
+        """
+        Kiểm tra xem AI có thể bỏ lượt không.
+        
+        :param boardState: Ma trận 2D hiện tại.
+        :param AI: Người chơi hiện tại (-1 hoặc 1).
+        :return: True nếu AI có thể bỏ lượt, ngược lại False.
+        """
+        notValid = len(self.get_valid_moves(boardState, AI)) == 0
+        isEye, _ = self.rule.is_captured(boardState, move[0], move[1])
+        if notValid or isEye:
+            return True
+        return False
 
 
 # import time 
