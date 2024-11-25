@@ -45,10 +45,13 @@ class GameControl:
 
     def update_scores(self):
         """Cập nhật điểm số từ bảng"""
-        if self.first_move_made:  # Chỉ cập nhật điểm sau nước đi đầu tiên
+        if self.typeChess == 1:
             self.player_score = self.board.whoIsWinner()[0]
             self.ai_score = self.board.whoIsWinner()[1]
-
+        else:
+            self.player_score = self.board.whoIsWinner()[1]
+            self.ai_score = self.board.whoIsWinner()[0]
+    
     def set_first_move_made(self):
         """Đánh dấu đã có nước đi đầu tiên"""
         self.first_move_made = True

@@ -63,9 +63,12 @@ while running:
         if board.current_turn == "AI":
             check_ai_move = board.ai_move()
             if check_ai_move:
-                gameControl.set_first_move_made()
                 skipForGame = 0
                 print(f"AI is ", board.whoIsWinner())
+                gameControl.set_first_move_made() # Đánh dấu đã có nước đi đầu tiên
+            else:
+                print(f"AI skipped ")
+                skipForGame += 1
 
     input_box = menu.getInputBox()
     player_name = menu.getPlayerName()
@@ -97,20 +100,10 @@ while running:
                         game_over = True
                     elif event.button == 1 and board.current_turn == "Player":
                         move_made = board.player_move(pos)
+                        skipForGame = 0
+                        print(f"Player is ", board.whoIsWinner())
                         if move_made:  # Nếu đặt được quân cờ
-                            gameControl.set_first_move_made()  # Đánh dấu đã có nước đi đầu tiên
-                            print(f"Player is ", board.whoIsWinner())
-                            skipForGame = 0
-                        elif not board.has_valid_moves():
-                            # Kiểm tra xem còn nước đi hợp lệ nào không
-                            skipForGame += 1
-                            if skipForGame == 2:
-                                game_over = True
-                            else:
-                                board.current_turn = "AI"
-                    # elif event.button == 3 and board.current_turn == "AI":
-                    #     board.test_ai_click(pos)
-                    #     skipForGame = 0
+                            gameControl.set_first_move_made()  # Đánh dấu đã có nước đi đầu tiên 
             else:
                 # Xử lý sự kiện chuột cho hộp thoại kết thúc
                 if event.type == pygame.MOUSEBUTTONDOWN:

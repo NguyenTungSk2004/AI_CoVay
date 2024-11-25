@@ -84,30 +84,3 @@ class Board:
     def whoIsWinner(self):
         return self.rule.who_win(self.board)
     
-    def has_valid_moves(self):
-        """Kiểm tra xem còn nước đi hợp lệ nào không"""
-        for i in range(self.size):
-            for j in range(self.size):
-                if self.board[i][j] == 0:  # Nếu ô trống
-                    # Kiểm tra nếu đặt quân cờ ở đây có hợp lệ không
-                    if self.is_valid_move((i, j)):
-                        return True
-        return False
-
-    def is_valid_move(self, pos):
-        """Kiểm tra nước đi có hợp lệ không"""
-        i, j = pos
-        if self.board[i][j] != 0:  # Ô đã có quân
-            return False
-        
-        # Tạo bản sao của bảng để kiểm tra
-        temp_board = [row[:] for row in self.board]
-        current_player_stone = self.typeChess if self.current_turn == "Player" else -self.typeChess
-        
-        # Kiểm tra luật tự tử và lặp lại trạng thái
-        if not (self.rule.is_suicidal(self.board, i, j, current_player_stone) and 
-                self.rule.is_repeated_state(self.board, i, j, current_player_stone)):
-            return False
-        
-        return True
-    
